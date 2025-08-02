@@ -1,8 +1,8 @@
 import BN__default from 'bn.js';
-import { T as TickArrayBitmapExtensionType } from '../../../type-dfefac72.js';
+import { T as TickArrayBitmapExtensionType } from '../../../type-271857c1.js';
 import '@solana/web3.js';
 import 'decimal.js';
-import '../../../api-527dc642.js';
+import '../../../api-b3ba2b90.js';
 import 'axios';
 import '../../../solana/type.js';
 import '@solana/spl-token';

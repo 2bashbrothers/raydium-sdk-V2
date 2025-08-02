@@ -1,7 +1,7 @@
 import BN__default from 'bn.js';
 import { SwapWithoutFeesResult, RoundDirection, TradingTokenResult } from './calculator.js';
 import '@solana/web3.js';
-import '../../../api-527dc642.js';
+import '../../../api-b3ba2b90.js';
 import 'axios';
 import '../../../solana/type.js';
 import '@solana/spl-token';
