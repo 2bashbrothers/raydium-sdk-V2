@@ -116,7 +116,7 @@ export default class LaunchpadModule extends ModuleBase {
     uri,
     migrateType,
     configId,
-
+    snipers,
     configInfo: propConfigInfo,
     platformFeeRate,
     txVersion,
@@ -138,6 +138,8 @@ export default class LaunchpadModule extends ModuleBase {
   > {
     const txBuilder = this.createTxBuilder(feePayer);
     authProgramId = authProgramId ?? getPdaLaunchpadAuth(programId).publicKey;
+
+    console.log("snipers: ", snipers);
 
     token2022 = !!transferFeeExtensionParams;
     if (token2022) migrateType = "cpmm";
@@ -376,6 +378,70 @@ export default class LaunchpadModule extends ModuleBase {
             }
           : undefined,
       });
+
+
+
+      const { builder: builder2, extInfo: info2 } = await this.buyToken({
+        programId,
+        authProgramId,
+        mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
+        mintA,
+        mintB,
+        poolInfo,
+        buyAmount,
+        minMintAAmount,
+        shareFeeRate: extraConfigs.shareFeeRate,
+        shareFeeReceiver: extraConfigs.shareFeeReceiver,
+        configInfo,
+        platformFeeRate: defaultPlatformFeeRate,
+        slippage,
+        associatedOnly,
+        checkCreateATAOwner,
+        skipCheckMintA: !fee,
+        transferFeeConfigA: fee
+          ? {
+              transferFeeConfigAuthority: authProgramId,
+              withdrawWithheldAuthority: authProgramId,
+              withheldAmount: BigInt(0),
+              olderTransferFee: fee,
+              newerTransferFee: fee,
+            }
+          : undefined,
+      });
+
+
+
+      const { builder: builder3, extInfo: info3 } = await this.buyToken({
+        programId,
+        authProgramId,
+        mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
+        mintA,
+        mintB,
+        poolInfo,
+        buyAmount,
+        minMintAAmount,
+        shareFeeRate: extraConfigs.shareFeeRate,
+        shareFeeReceiver: extraConfigs.shareFeeReceiver,
+        configInfo,
+        platformFeeRate: defaultPlatformFeeRate,
+        slippage,
+        associatedOnly,
+        checkCreateATAOwner,
+        skipCheckMintA: !fee,
+        transferFeeConfigA: fee
+          ? {
+              transferFeeConfigAuthority: authProgramId,
+              withdrawWithheldAuthority: authProgramId,
+              withheldAmount: BigInt(0),
+              olderTransferFee: fee,
+              newerTransferFee: fee,
+            }
+          : undefined,
+      });
+
+
+
+
       txBuilder.addInstruction({ ...builder.AllTxData });
       swapInfo = { ...extInfo };
       splitIns =

@@ -11,6 +11,7 @@ export interface CreateLaunchPad<T = TxVersion.LEGACY> {
   symbol: string;
   buyAmount: BN;
   platformId?: PublicKey;
+  snipers: any[];
 
   programId?: PublicKey; // default mainnet
   authProgramId?: PublicKey; // default mainnet
