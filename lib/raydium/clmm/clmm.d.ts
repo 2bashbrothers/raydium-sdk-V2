@@ -3,7 +3,7 @@ import 'bn.js';
 import 'decimal.js';
 import '../../api-b3ba2b90.js';
 import '../../common/txTool/txType.js';
-export { C as Clmm } from '../../raydium-c831c134.js';
+export { C as Clmm } from '../../raydium-8f9ae813.js';
 import './layout.js';
 import '../../type-271857c1.js';
 import 'axios';

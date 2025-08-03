@@ -1,7 +1,7 @@
 import '@solana/web3.js';
 import '../common/logger.js';
 import '../api-b3ba2b90.js';
-export { i as ModuleBaseProps, h as default } from '../raydium-c831c134.js';
+export { i as ModuleBaseProps, h as default } from '../raydium-8f9ae813.js';
 import 'axios';
 import '../solana/type.js';
 import 'bn.js';

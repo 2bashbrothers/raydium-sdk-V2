@@ -104,6 +104,10 @@ export default class LaunchpadModule extends ModuleBase {
     super(params);
   }
 
+  public async sayHi() {
+    console.log("hi");
+  }
+
   public async createLaunchpad<T extends TxVersion>({
     programId = LAUNCHPAD_PROGRAM,
     authProgramId,

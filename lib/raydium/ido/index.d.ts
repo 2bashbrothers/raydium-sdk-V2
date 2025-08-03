@@ -1,4 +1,4 @@
-export { f as default } from '../../raydium-c831c134.js';
+export { f as default } from '../../raydium-8f9ae813.js';
 export { makeClaimInstruction, makeClaimInstructionV4, makePurchaseInstruction } from './instruction.js';
 export { ClaimInstructionKeys, ClaimInstructionKeysV3, IdoClaimInstructionParams, IdoPoolConfig, IdoUserKeys, IdoVersion, PurchaseInstructionKeys, SnapshotVersion } from './type.js';
 export { claimLayout, purchaseLayout } from './layout.js';
