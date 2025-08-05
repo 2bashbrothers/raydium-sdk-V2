@@ -1,9 +1,10 @@
-import { PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 
 import { createLogger, Logger } from "../common/logger";
 import { TxBuilder } from "../common/txTool/txTool";
 
 import { Raydium } from "./";
+import { Owner } from "@/common";
 
 export interface ModuleBaseProps {
   scope: Raydium;
@@ -37,6 +38,20 @@ export default class ModuleBase {
       feePayer: feePayer || this.scope.ownerPubKey,
       cluster: this.scope.cluster,
       owner: this.scope.owner,
+      blockhashCommitment: this.scope.blockhashCommitment,
+      loopMultiTxStatus: this.scope.loopMultiTxStatus,
+      api: this.scope.api,
+      signAllTransactions: this.scope.signAllTransactions,
+    });
+  }
+
+  protected createSniperTxBuilder(owner: Keypair, feePayer: PublicKey): TxBuilder {
+    const sniperOwner = new Owner(owner);
+    return new TxBuilder({
+      connection: this.scope.connection,
+      feePayer: feePayer,
+      cluster: this.scope.cluster,
+      owner: sniperOwner,
       blockhashCommitment: this.scope.blockhashCommitment,
       loopMultiTxStatus: this.scope.loopMultiTxStatus,
       api: this.scope.api,

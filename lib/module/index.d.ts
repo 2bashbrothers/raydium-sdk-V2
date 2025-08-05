@@ -1,4 +1,4 @@
-export { cf as CurrencyAmount, cg as Fraction, ci as Percent, cj as Price, ce as TokenAmount, ch as _100_PERCENT, cd as splitNumber } from '../api-b3ba2b90.js';
+export { cf as CurrencyAmount, cg as Fraction, ci as Percent, cj as Price, ce as TokenAmount, ch as _100_PERCENT, cd as splitNumber } from '../api-d05737b7.js';
 export { Currency, currencyEquals } from './currency.js';
 export { WrappedBig, WrappedDecimal } from './formatter.js';
 export { Token, TokenProps } from './token.js';

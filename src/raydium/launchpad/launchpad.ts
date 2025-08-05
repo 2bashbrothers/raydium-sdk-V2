@@ -26,6 +26,7 @@ import {
   SellToken,
   SellTokenExactOut,
   UpdatePlatform,
+  Sniper
 } from "./type";
 import {
   getPdaCreatorFeeVaultAuth,
@@ -63,7 +64,7 @@ import {
   unpackMint,
 } from "@solana/spl-token";
 import BN from "bn.js";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Transaction, VersionedTransaction } from "@solana/web3.js";
 import { getPdaMetadataKey } from "../clmm";
 import { LaunchpadConfig, LaunchpadPool, PlatformConfig } from "./layout";
 import { Curve, SwapInfoReturn } from "./curve/curve";
@@ -104,8 +105,8 @@ export default class LaunchpadModule extends ModuleBase {
     super(params);
   }
 
-  public async sayHi() {
-    console.log("hi");
+  public async sayHello() {
+    console.log("hello");
   }
 
   public async createLaunchpad<T extends TxVersion>({
@@ -137,13 +138,13 @@ export default class LaunchpadModule extends ModuleBase {
     token2022,
     transferFeeExtensionParams,
     ...extraConfigs
-  }: CreateLaunchPad<T>): Promise<
-    MakeMultiTxData<T, { address: LaunchpadPoolInfo & { poolId: PublicKey }; swapInfo: SwapInfoReturnExt }>
-  > {
+  }: CreateLaunchPad<T>): Promise<{
+    tx: MakeMultiTxData<T, { address: LaunchpadPoolInfo & { poolId: PublicKey }; swapInfo: SwapInfoReturnExt }>,
+    txs: any[]
+  }> {
+    const txs: any[] = [];
     const txBuilder = this.createTxBuilder(feePayer);
     authProgramId = authProgramId ?? getPdaLaunchpadAuth(programId).publicKey;
-
-    console.log("snipers: ", snipers);
 
     token2022 = !!transferFeeExtensionParams;
     if (token2022) migrateType = "cpmm";
@@ -355,6 +356,7 @@ export default class LaunchpadModule extends ModuleBase {
     let splitIns;
     if (extraSigners?.length) txBuilder.addInstruction({ signers: extraSigners });
     if (!extraConfigs.createOnly) {
+      
       const { builder, extInfo } = await this.buyToken({
         programId,
         authProgramId,
@@ -383,68 +385,39 @@ export default class LaunchpadModule extends ModuleBase {
           : undefined,
       });
 
+      
 
-
-      const { builder: builder2, extInfo: info2 } = await this.buyToken({
-        programId,
-        authProgramId,
-        mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
-        mintA,
-        mintB,
-        poolInfo,
-        buyAmount,
-        minMintAAmount,
-        shareFeeRate: extraConfigs.shareFeeRate,
-        shareFeeReceiver: extraConfigs.shareFeeReceiver,
-        configInfo,
-        platformFeeRate: defaultPlatformFeeRate,
-        slippage,
-        associatedOnly,
-        checkCreateATAOwner,
-        skipCheckMintA: !fee,
-        transferFeeConfigA: fee
-          ? {
-              transferFeeConfigAuthority: authProgramId,
-              withdrawWithheldAuthority: authProgramId,
-              withheldAmount: BigInt(0),
-              olderTransferFee: fee,
-              newerTransferFee: fee,
-            }
-          : undefined,
-      });
-
-
-
-      const { builder: builder3, extInfo: info3 } = await this.buyToken({
-        programId,
-        authProgramId,
-        mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
-        mintA,
-        mintB,
-        poolInfo,
-        buyAmount,
-        minMintAAmount,
-        shareFeeRate: extraConfigs.shareFeeRate,
-        shareFeeReceiver: extraConfigs.shareFeeReceiver,
-        configInfo,
-        platformFeeRate: defaultPlatformFeeRate,
-        slippage,
-        associatedOnly,
-        checkCreateATAOwner,
-        skipCheckMintA: !fee,
-        transferFeeConfigA: fee
-          ? {
-              transferFeeConfigAuthority: authProgramId,
-              withdrawWithheldAuthority: authProgramId,
-              withheldAmount: BigInt(0),
-              olderTransferFee: fee,
-              newerTransferFee: fee,
-            }
-          : undefined,
-      });
-
-
-
+      for (const sniper of snipers) {
+        const { builder, extInfo, transaction } = await this.buyToken({
+          programId,
+          authProgramId,
+          mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
+          mintA,
+          mintB,
+          poolInfo,
+          buyAmount: sniper.amount,
+          minMintAAmount,
+          shareFeeRate: extraConfigs.shareFeeRate,
+          shareFeeReceiver: extraConfigs.shareFeeReceiver,
+          configInfo,
+          platformFeeRate: defaultPlatformFeeRate,
+          slippage,
+          sniper,
+          associatedOnly,
+          checkCreateATAOwner,
+          skipCheckMintA: !fee,
+          transferFeeConfigA: fee
+            ? {
+                transferFeeConfigAuthority: authProgramId,
+                withdrawWithheldAuthority: authProgramId,
+                withheldAmount: BigInt(0),
+                olderTransferFee: fee,
+                newerTransferFee: fee,
+              }
+            : undefined,
+        });
+        txs.push(transaction);
+      }
 
       txBuilder.addInstruction({ ...builder.AllTxData });
       swapInfo = { ...extInfo };
@@ -456,8 +429,8 @@ export default class LaunchpadModule extends ModuleBase {
 
     txBuilder.addTipInstruction(txTipConfig);
 
-    if (txVersion === TxVersion.V0)
-      return txBuilder.sizeCheckBuildV0({
+    if (txVersion === TxVersion.V0) {
+      const mintTransaction = txBuilder.sizeCheckBuildV0({
         computeBudgetConfig,
         swapInfo,
         splitIns,
@@ -468,7 +441,15 @@ export default class LaunchpadModule extends ModuleBase {
       }) as Promise<
         MakeMultiTxData<T, { address: LaunchpadPoolInfo & { poolId: PublicKey }; swapInfo: SwapInfoReturnExt }>
       >;
-    return txBuilder.sizeCheckBuild({
+
+      return {
+        tx: await mintTransaction,
+        txs: txs
+      }
+
+    }
+      
+    const transactionMint = txBuilder.sizeCheckBuild({
       computeBudgetConfig,
       swapInfo,
       splitIns,
@@ -479,6 +460,10 @@ export default class LaunchpadModule extends ModuleBase {
     }) as Promise<
       MakeMultiTxData<T, { address: LaunchpadPoolInfo & { poolId: PublicKey }; swapInfo: SwapInfoReturnExt }>
     >;
+    return {
+      tx: await transactionMint,
+      txs: txs
+    }
   }
 
   public async buyToken<T extends TxVersion>({
@@ -491,7 +476,6 @@ export default class LaunchpadModule extends ModuleBase {
 
     configInfo: propConfigInfo,
     platformFeeRate,
-
     txVersion,
     computeBudgetConfig,
     txTipConfig,
@@ -502,14 +486,14 @@ export default class LaunchpadModule extends ModuleBase {
 
     shareFeeRate = new BN(0),
     shareFeeReceiver,
-
+    sniper,
     associatedOnly = true,
     checkCreateATAOwner = false,
     transferFeeConfigA: propsTransferFeeConfigA,
     skipCheckMintA = false,
   }: BuyToken<T>): Promise<MakeTxData<T, SwapInfoReturnExt>> {
     if (buyAmount.lte(new BN(0))) this.logAndCreateError("buy amount should gt 0:", buyAmount.toString());
-    const txBuilder = this.createTxBuilder(feePayer);
+    const txBuilder = sniper ? this.createSniperTxBuilder(sniper.owner, sniper.owner.publicKey) : this.createTxBuilder(feePayer);
     const { publicKey: poolId } = getPdaLaunchpadPoolId(programId, mintA, mintB);
     authProgramId = authProgramId ?? getPdaLaunchpadAuth(programId).publicKey;
 
@@ -534,9 +518,9 @@ export default class LaunchpadModule extends ModuleBase {
     txBuilder.addInstruction({
       instructions: [
         createAssociatedTokenAccountIdempotentInstruction(
-          this.scope.ownerPubKey,
+          sniper?.owner.publicKey || this.scope.ownerPubKey,
           userTokenAccountA,
-          this.scope.ownerPubKey,
+          sniper?.owner.publicKey || this.scope.ownerPubKey,
           mintA,
           mintAProgram,
         ),
@@ -545,10 +529,10 @@ export default class LaunchpadModule extends ModuleBase {
     const { account: _ownerTokenAccountB, instructionParams: _tokenAccountBInstruction } =
       await this.scope.account.getOrCreateTokenAccount({
         mint: mintB,
-        owner: this.scope.ownerPubKey,
+        owner: sniper?.owner.publicKey || this.scope.ownerPubKey,
         createInfo: mintBUseSOLBalance
           ? {
-              payer: this.scope.ownerPubKey!,
+              payer: sniper?.owner.publicKey || this.scope.ownerPubKey!,
               amount: buyAmount,
             }
           : undefined,
@@ -626,7 +610,7 @@ export default class LaunchpadModule extends ModuleBase {
     if (shareATA) {
       txBuilder.addInstruction({
         instructions: [
-          createAssociatedTokenAccountIdempotentInstruction(this.scope.ownerPubKey, shareATA, shareFeeReceiver!, mintB),
+          createAssociatedTokenAccountIdempotentInstruction(sniper?.owner.publicKey || this.scope.ownerPubKey, shareATA, shareFeeReceiver!, mintB),
         ],
       });
     }
@@ -635,7 +619,7 @@ export default class LaunchpadModule extends ModuleBase {
       instructions: [
         buyExactInInstruction(
           programId,
-          this.scope.ownerPubKey,
+          sniper?.owner.publicKey || this.scope.ownerPubKey,
           authProgramId,
           poolInfo.configId,
           poolInfo.platformId,

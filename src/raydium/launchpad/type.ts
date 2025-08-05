@@ -1,4 +1,4 @@
-import { PublicKey, Signer } from "@solana/web3.js";
+import { Keypair, PublicKey, Signer } from "@solana/web3.js";
 import { ComputeBudgetConfig, TxTipConfig } from "../type";
 import { TxVersion } from "@/common";
 import BN from "bn.js";
@@ -11,7 +11,7 @@ export interface CreateLaunchPad<T = TxVersion.LEGACY> {
   symbol: string;
   buyAmount: BN;
   platformId?: PublicKey;
-  snipers: any[];
+  snipers: Sniper[];
 
   programId?: PublicKey; // default mainnet
   authProgramId?: PublicKey; // default mainnet
@@ -56,7 +56,7 @@ export interface BuyToken<T = TxVersion.LEGACY> {
   mintA: PublicKey;
   mintAProgram?: PublicKey;
   buyAmount: BN;
-
+  sniper?: Sniper;
   programId?: PublicKey; // default mainnet
   authProgramId?: PublicKey; // default mainnet
   mintB?: PublicKey; // default SOL
@@ -314,3 +314,7 @@ export interface ClaimCreatorFee<T = TxVersion.LEGACY> {
 export type LaunchpadPoolInfo = ReturnType<typeof LaunchpadPool.decode>;
 export type LaunchpadConfigInfo = ReturnType<typeof LaunchpadConfig.decode>;
 export type LaunchpadPlatformInfo = ReturnType<typeof PlatformConfig.decode>;
+export type Sniper = {
+  owner: Keypair,
+  amount: BN
+}

@@ -1,7 +1,7 @@
 import { PublicKey } from '@solana/web3.js';
 import { ProgramAddress } from '../../common/txTool/txUtils.js';
 import '../../common/txTool/lookupTable.js';
-import '../../api-b3ba2b90.js';
+import '../../api-d05737b7.js';
 import 'axios';
 import '../../solana/type.js';
 import 'bn.js';

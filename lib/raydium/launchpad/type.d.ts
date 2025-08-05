@@ -1,5 +1,5 @@
-import { PublicKey, Signer } from '@solana/web3.js';
-import { bU as ComputeBudgetConfig, bV as TxTipConfig } from '../../api-b3ba2b90.js';
+import { PublicKey, Signer, Keypair } from '@solana/web3.js';
+import { bU as ComputeBudgetConfig, bV as TxTipConfig } from '../../api-d05737b7.js';
 import BN__default from 'bn.js';
 import { TransferFeeConfig } from '@solana/spl-token';
 import { TxVersion } from '../../common/txTool/txType.js';
@@ -23,7 +23,7 @@ interface CreateLaunchPad<T = TxVersion.LEGACY> {
     symbol: string;
     buyAmount: BN__default;
     platformId?: PublicKey;
-    snipers: any[];
+    snipers: Sniper[];
     programId?: PublicKey;
     authProgramId?: PublicKey;
     decimals?: number;
@@ -62,6 +62,7 @@ interface BuyToken<T = TxVersion.LEGACY> {
     mintA: PublicKey;
     mintAProgram?: PublicKey;
     buyAmount: BN__default;
+    sniper?: Sniper;
     programId?: PublicKey;
     authProgramId?: PublicKey;
     mintB?: PublicKey;
@@ -287,5 +288,9 @@ interface ClaimCreatorFee<T = TxVersion.LEGACY> {
 declare type LaunchpadPoolInfo = ReturnType<typeof LaunchpadPool.decode>;
 declare type LaunchpadConfigInfo = ReturnType<typeof LaunchpadConfig.decode>;
 declare type LaunchpadPlatformInfo = ReturnType<typeof PlatformConfig.decode>;
+declare type Sniper = {
+    owner: Keypair;
+    amount: BN__default;
+};
 
-export { BuyToken, BuyTokenExactOut, ClaimAllPlatformFee, ClaimCreatorFee, ClaimMultiVesting, ClaimMultipleVaultPlatformFee, ClaimPlatformFee, ClaimVaultPlatformFee, ClaimVesting, CreateLaunchPad, CreateMultipleVesting, CreatePlatform, CreateVesting, LaunchpadConfigInfo, LaunchpadPlatformInfo, LaunchpadPoolInfo, SellToken, SellTokenExactOut, UpdatePlatform };
+export { BuyToken, BuyTokenExactOut, ClaimAllPlatformFee, ClaimCreatorFee, ClaimMultiVesting, ClaimMultipleVaultPlatformFee, ClaimPlatformFee, ClaimVaultPlatformFee, ClaimVesting, CreateLaunchPad, CreateMultipleVesting, CreatePlatform, CreateVesting, LaunchpadConfigInfo, LaunchpadPlatformInfo, LaunchpadPoolInfo, SellToken, SellTokenExactOut, Sniper, UpdatePlatform };
