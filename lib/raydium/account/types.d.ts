@@ -1,6 +1,6 @@
 import { PublicKey } from '@solana/web3.js';
 import BN__default from 'bn.js';
-import { af as BigNumberish } from '../../api-d05737b7.js';
+import { af as BigNumberish } from '../../api-79467c1d.js';
 import { GetStructureSchema } from '../../marshmallow/buffer-layout.js';
 import { splAccountLayout } from './layout.js';
 import 'axios';

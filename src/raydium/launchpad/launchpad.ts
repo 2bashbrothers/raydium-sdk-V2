@@ -524,7 +524,7 @@ export default class LaunchpadModule extends ModuleBase {
         createAssociatedTokenAccountIdempotentInstruction(
           sniper?.owner.publicKey || this.scope.ownerPubKey,
           userTokenAccountA,
-          sniper?.owner.publicKey || this.scope.ownerPubKey,
+          this.scope.ownerPubKey,
           mintA,
           mintAProgram,
         )
