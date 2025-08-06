@@ -511,7 +511,7 @@ export default class LaunchpadModule extends ModuleBase {
       }
     }
 
-    const userTokenAccountA = this.scope.account.getAssociatedTokenAccount(mintA, mintAProgram);
+    const userTokenAccountA = sniper ? this.scope.account.getAssociatedTokenAccountByOwner(sniper.owner.publicKey, mintA, mintAProgram) : this.scope.account.getAssociatedTokenAccount(mintA, mintAProgram);
     let userTokenAccountB: PublicKey | null = null;
     const mintBUseSOLBalance = mintB.equals(NATIVE_MINT);
 

@@ -75,6 +75,10 @@ export default class Account extends ModuleBase {
     return getATAAddress(this.scope.ownerPubKey, mint, programId).publicKey;
   }
 
+  public getAssociatedTokenAccountByOwner(owner: PublicKey, mint: PublicKey, programId?: PublicKey): PublicKey {
+    return getATAAddress(owner, mint, programId).publicKey;
+  }
+
   public resetTokenAccounts(): void {
     if (this._clientOwnedToken) return;
     this._tokenAccounts = [];
