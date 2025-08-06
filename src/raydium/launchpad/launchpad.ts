@@ -518,6 +518,7 @@ export default class LaunchpadModule extends ModuleBase {
     const mintBUseSOLBalance = mintB.equals(NATIVE_MINT);
 
     console.log("userTokenAccountA: ", userTokenAccountA);
+    console.log("mintAProgram: ", mintAProgram);
 
     txBuilder.addInstruction({
       instructions: [

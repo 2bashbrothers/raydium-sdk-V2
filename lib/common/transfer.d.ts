@@ -1,7 +1,7 @@
 import { EpochInfo } from '@solana/web3.js';
 import BN__default from 'bn.js';
 import { TransferFeeConfig } from '@solana/spl-token';
-import { bY as GetTransferAmountFee, T as TransferFeeDataBaseType } from '../api-d05737b7.js';
+import { bY as GetTransferAmountFee, T as TransferFeeDataBaseType } from '../api-79467c1d.js';
 import 'axios';
 import '../solana/type.js';
 import '../api/url.js';

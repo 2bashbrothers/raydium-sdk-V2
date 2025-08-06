@@ -1,4 +1,4 @@
-import { bK as TokenInfo } from '../../api-d05737b7.js';
+import { bK as TokenInfo } from '../../api-79467c1d.js';
 import 'axios';
 import '../../solana/type.js';
 import '@solana/web3.js';
