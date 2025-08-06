@@ -511,9 +511,13 @@ export default class LaunchpadModule extends ModuleBase {
       }
     }
 
-    const userTokenAccountA = sniper ? this.scope.account.getAssociatedTokenAccountByOwner(sniper.owner.publicKey, mintA, mintAProgram) : this.scope.account.getAssociatedTokenAccount(mintA, mintAProgram);
+    const userTokenAccountA = sniper 
+      ? this.scope.account.getAssociatedTokenAccountByOwner(sniper.owner.publicKey, mintA, mintAProgram) 
+      : this.scope.account.getAssociatedTokenAccount(mintA, mintAProgram);
     let userTokenAccountB: PublicKey | null = null;
     const mintBUseSOLBalance = mintB.equals(NATIVE_MINT);
+
+    console.log("userTokenAccountA: ", userTokenAccountA);
 
     txBuilder.addInstruction({
       instructions: [
@@ -523,9 +527,10 @@ export default class LaunchpadModule extends ModuleBase {
           sniper?.owner.publicKey || this.scope.ownerPubKey,
           mintA,
           mintAProgram,
-        ),
+        )
       ],
     });
+
     const { account: _ownerTokenAccountB, instructionParams: _tokenAccountBInstruction } =
       await this.scope.account.getOrCreateTokenAccount({
         mint: mintB,
