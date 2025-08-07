@@ -415,7 +415,10 @@ export default class LaunchpadModule extends ModuleBase {
               }
             : undefined,
         });
-        txs.push(sniperBuilder.AllTxData);
+        txs.push({
+          ...sniperBuilder.AllTxData,
+          blockHash: this.scope.blockhashCommitment
+        });
       }
 
       txBuilder.addInstruction({ ...builder.AllTxData });

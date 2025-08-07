@@ -1,5 +1,5 @@
 import { PublicKey, Signer, Keypair } from '@solana/web3.js';
-import { bU as ComputeBudgetConfig, bV as TxTipConfig } from '../../api-d05737b7.js';
+import { bU as ComputeBudgetConfig, bV as TxTipConfig } from '../../api-cb955b52.js';
 import BN__default from 'bn.js';
 import { TransferFeeConfig } from '@solana/spl-token';
 import { TxVersion } from '../../common/txTool/txType.js';

@@ -118,6 +118,7 @@ export interface MultiTxV0BuildData<T = Record<string, any>>
     lookupTableCache?: CacheLTA;
     lookupTableAddress?: string[];
   };
+  blockHash?: string;
   execute: (executeParams?: MultiTxExecuteParam) => Promise<{ txIds: string[]; signedTxs: VersionedTransaction[] }>;
 }
 
@@ -1138,6 +1139,7 @@ export class TxBuilder {
       transactions: allTransactions,
       buildProps: props,
       signers: allSigners,
+      blockHash: blockHash,
       instructionTypes: this.instructionTypes,
       execute: async (executeParams?: MultiTxExecuteParam) => {
         const {
@@ -1278,8 +1280,6 @@ export class TxBuilder {
       extInfo: extInfo || {},
     };
   }
-
-
 
   public async buildSniperTransaction(
     props?: Record<string, any> & {
