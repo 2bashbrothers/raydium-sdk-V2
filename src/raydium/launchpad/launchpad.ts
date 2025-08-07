@@ -357,36 +357,37 @@ export default class LaunchpadModule extends ModuleBase {
     if (extraSigners?.length) txBuilder.addInstruction({ signers: extraSigners });
     if (!extraConfigs.createOnly) {
       
-      // const { builder, extInfo } = await this.buyToken({
-      //   programId,
-      //   authProgramId,
-      //   mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
-      //   mintA,
-      //   mintB,
-      //   poolInfo,
-      //   buyAmount,
-      //   minMintAAmount,
-      //   shareFeeRate: extraConfigs.shareFeeRate,
-      //   shareFeeReceiver: extraConfigs.shareFeeReceiver,
-      //   configInfo,
-      //   platformFeeRate: defaultPlatformFeeRate,
-      //   slippage,
-      //   associatedOnly,
-      //   checkCreateATAOwner,
-      //   skipCheckMintA: !fee,
-      //   transferFeeConfigA: fee
-      //     ? {
-      //         transferFeeConfigAuthority: authProgramId,
-      //         withdrawWithheldAuthority: authProgramId,
-      //         withheldAmount: BigInt(0),
-      //         olderTransferFee: fee,
-      //         newerTransferFee: fee,
-      //       }
-      //     : undefined,
-      // });
-      const sniper = snipers[0];
+      const { builder, extInfo } = await this.buyToken({
+        programId,
+        authProgramId,
+        mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
+        mintA,
+        mintB,
+        poolInfo,
+        buyAmount,
+        minMintAAmount,
+        shareFeeRate: extraConfigs.shareFeeRate,
+        shareFeeReceiver: extraConfigs.shareFeeReceiver,
+        configInfo,
+        platformFeeRate: defaultPlatformFeeRate,
+        slippage,
+        associatedOnly,
+        checkCreateATAOwner,
+        skipCheckMintA: !fee,
+        transferFeeConfigA: fee
+          ? {
+              transferFeeConfigAuthority: authProgramId,
+              withdrawWithheldAuthority: authProgramId,
+              withheldAmount: BigInt(0),
+              olderTransferFee: fee,
+              newerTransferFee: fee,
+            }
+          : undefined,
+      });
 
-      const { builder, extInfo, transaction } = await this.buyToken({
+      console.log("PREPARING SNIPER TRANSACTIONS");
+      for (const sniper of snipers) {
+        const { builder: sniperBuilder, extInfo } = await this.buyToken({
           programId,
           authProgramId,
           mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
@@ -414,41 +415,8 @@ export default class LaunchpadModule extends ModuleBase {
               }
             : undefined,
         });
-        txs.push(transaction);
-
-      
-
-      // for (const sniper of snipers) {
-      //   const { builder, extInfo, transaction } = await this.buyToken({
-      //     programId,
-      //     authProgramId,
-      //     mintAProgram: token2022 ? TOKEN_2022_PROGRAM_ID : undefined,
-      //     mintA,
-      //     mintB,
-      //     poolInfo,
-      //     buyAmount: sniper.amount,
-      //     minMintAAmount,
-      //     shareFeeRate: extraConfigs.shareFeeRate,
-      //     shareFeeReceiver: extraConfigs.shareFeeReceiver,
-      //     configInfo,
-      //     platformFeeRate: defaultPlatformFeeRate,
-      //     slippage,
-      //     sniper,
-      //     associatedOnly,
-      //     checkCreateATAOwner,
-      //     skipCheckMintA: !fee,
-      //     transferFeeConfigA: fee
-      //       ? {
-      //           transferFeeConfigAuthority: authProgramId,
-      //           withdrawWithheldAuthority: authProgramId,
-      //           withheldAmount: BigInt(0),
-      //           olderTransferFee: fee,
-      //           newerTransferFee: fee,
-      //         }
-      //       : undefined,
-      //   });
-      //   txs.push(transaction);
-      // }
+        txs.push(sniperBuilder.AllTxData);
+      }
 
       txBuilder.addInstruction({ ...builder.AllTxData });
       swapInfo = { ...extInfo };
