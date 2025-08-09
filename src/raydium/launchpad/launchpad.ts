@@ -538,6 +538,8 @@ export default class LaunchpadModule extends ModuleBase {
       ],
     });
 
+    console.log("mintBUseSOLBalance: ", mintBUseSOLBalance);
+
     const { account: _ownerTokenAccountB, instructionParams: _tokenAccountBInstruction } =
       await this.scope.account.getOrCreateTokenAccount({
         mint: mintB,

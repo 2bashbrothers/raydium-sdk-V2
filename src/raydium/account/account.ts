@@ -196,6 +196,9 @@ export default class Account extends ModuleBase {
       checkCreateATAOwner = false,
       assignSeed,
     } = params;
+
+    console.log("******************associatedOnly: ", associatedOnly)
+
     const tokenProgram = new PublicKey(params.tokenProgram || TOKEN_PROGRAM_ID);
     const ata = this.getAssociatedTokenAccount(mint, new PublicKey(tokenProgram));
     const accounts = (notUseTokenAccount ? [] : this.tokenAccountRawInfos)
@@ -218,8 +221,10 @@ export default class Account extends ModuleBase {
       const _createATAIns = createAssociatedTokenAccountIdempotentInstruction(owner, ata, owner, mint, tokenProgram);
       const _ataInTokenAcc = this.tokenAccountRawInfos.find((i) => i.pubkey.equals(ata));
       if (checkCreateATAOwner) {
+        console.log("******************checkCreateATAOwner: ", checkCreateATAOwner)
         const ataInfo = await this.scope.connection.getAccountInfo(ata);
         if (ataInfo === null) {
+          console.log("******************ataInfo == null: ", checkCreateATAOwner)
           newTxInstructions.instructions?.push(_createATAIns);
           newTxInstructions.instructionTypes!.push(InstructionType.CreateATA);
         } else if (
@@ -227,15 +232,18 @@ export default class Account extends ModuleBase {
           AccountLayout.decode(ataInfo.data).mint.equals(mint) &&
           AccountLayout.decode(ataInfo.data).owner.equals(owner)
         ) {
+          console.log("******************else empty: ")
           /* empty */
         } else {
           throw Error(`create ata check error -> mint: ${mint.toString()}, ata: ${ata.toString()}`);
         }
       } else if (_ataInTokenAcc === undefined) {
+        console.log("******************_ataInTokenAcc undefined")
         newTxInstructions.instructions!.push(_createATAIns);
         newTxInstructions.instructionTypes!.push(InstructionType.CreateATA);
       }
       if (mint.equals(WSOLMint) && createInfo.amount) {
+        console.log("createWSolAccountInstructions*********************************");
         const txInstruction = await createWSolAccountInstructions({
           connection: this.scope.connection,
           owner: owner ? owner : this.scope.ownerPubKey,
@@ -249,6 +257,7 @@ export default class Account extends ModuleBase {
         newTxInstructions.endInstructionTypes!.push(...(txInstruction.endInstructionTypes || []));
 
         if (createInfo.amount) {
+          console.log("******************createInfo.amount")
           newTxInstructions.instructions!.push(
             makeTransferInstruction({
               source: txInstruction.addresses.newAccount,
@@ -263,6 +272,7 @@ export default class Account extends ModuleBase {
       }
 
       if (!skipCloseAccount && _ataInTokenAcc === undefined) {
+        console.log("******************skipCloseAccount")
         newTxInstructions.endInstructions!.push(
           closeAccountInstruction({
             owner,
@@ -276,6 +286,7 @@ export default class Account extends ModuleBase {
 
       return { account: ata, instructionParams: newTxInstructions };
     } else {
+      console.log("******************newTokenAccount")
       const newTokenAccount = generatePubKey({ fromPublicKey: owner, programId: tokenProgram, assignSeed });
       const balanceNeeded = await this.scope.connection.getMinimumBalanceForRentExemption(AccountLayout.span);
 
