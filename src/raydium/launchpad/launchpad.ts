@@ -389,11 +389,11 @@ export default class LaunchpadModule extends ModuleBase {
       console.log("PREPARING SNIPER TRANSACTIONS");
       for (const sniper of snipers) {
 
-        const txTipConfig = {
-          feePayer: sniper.owner?.publicKey,
-          address: new PublicKey('HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe'),
-          amount: new BN(100_000)
-        }
+        // const txTipConfig = {
+        //   feePayer: sniper.owner?.publicKey,
+        //   address: new PublicKey('HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe'),
+        //   amount: new BN(100_000)
+        // }
 
         const { builder: sniperBuilder, extInfo } = await this.buyToken({
           programId,
@@ -410,7 +410,6 @@ export default class LaunchpadModule extends ModuleBase {
           platformFeeRate: defaultPlatformFeeRate,
           slippage,
           sniper,
-          txTipConfig,
           associatedOnly,
           checkCreateATAOwner,
           skipCheckMintA: !fee,
@@ -437,8 +436,6 @@ export default class LaunchpadModule extends ModuleBase {
           ? [builder.allInstructions[0]]
           : undefined;
     }
-
-    const blockHash = await 
 
     txBuilder.addTipInstruction(txTipConfig);
 
