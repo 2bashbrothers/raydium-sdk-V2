@@ -389,12 +389,6 @@ export default class LaunchpadModule extends ModuleBase {
       console.log("PREPARING SNIPER TRANSACTIONS");
       for (const sniper of snipers) {
 
-        // const txTipConfig = {
-        //   feePayer: sniper.owner?.publicKey,
-        //   address: new PublicKey('HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe'),
-        //   amount: new BN(100_000)
-        // }
-
         const { builder: sniperBuilder, extInfo } = await this.buyToken({
           programId,
           authProgramId,
@@ -560,6 +554,9 @@ export default class LaunchpadModule extends ModuleBase {
         checkCreateATAOwner,
       });
     if (_ownerTokenAccountB) userTokenAccountB = _ownerTokenAccountB;
+
+    console.log("_tokenAccountBInstruction: ", _tokenAccountBInstruction);
+
     txBuilder.addInstruction(_tokenAccountBInstruction || {});
     if (userTokenAccountB === undefined)
       this.logAndCreateError(

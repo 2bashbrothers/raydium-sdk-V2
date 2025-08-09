@@ -238,7 +238,7 @@ export default class Account extends ModuleBase {
       if (mint.equals(WSOLMint) && createInfo.amount) {
         const txInstruction = await createWSolAccountInstructions({
           connection: this.scope.connection,
-          owner: this.scope.ownerPubKey,
+          owner: owner ? owner : this.scope.ownerPubKey,
           payer: createInfo.payer || this.scope.ownerPubKey,
           amount: createInfo.amount ?? 0,
           skipCloseAccount,
@@ -253,7 +253,7 @@ export default class Account extends ModuleBase {
             makeTransferInstruction({
               source: txInstruction.addresses.newAccount,
               destination: ata,
-              owner: this.scope.ownerPubKey,
+              owner: owner ? owner : this.scope.ownerPubKey,
               amount: createInfo.amount,
               tokenProgram: TOKEN_PROGRAM_ID,
             }),
