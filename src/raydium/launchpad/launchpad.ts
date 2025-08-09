@@ -69,6 +69,7 @@ import { getPdaMetadataKey } from "../clmm";
 import { LaunchpadConfig, LaunchpadPool, PlatformConfig } from "./layout";
 import { Curve, SwapInfoReturn } from "./curve/curve";
 import Decimal from "decimal.js";
+import { getRecentBlockHash } from "@/common";
 
 export const LaunchpadPoolInitParam = {
   initPriceX64: new BN("515752397214619"),
@@ -387,6 +388,13 @@ export default class LaunchpadModule extends ModuleBase {
 
       console.log("PREPARING SNIPER TRANSACTIONS");
       for (const sniper of snipers) {
+
+        const txTipConfig = {
+          feePayer: sniper.owner?.publicKey,
+          address: new PublicKey('HFqU5x63VTqvQss8hp11i4wVV8bD44PvwucfZ2bU7gRe'),
+          amount: new BN(100_000)
+        }
+
         const { builder: sniperBuilder, extInfo } = await this.buyToken({
           programId,
           authProgramId,
@@ -402,6 +410,7 @@ export default class LaunchpadModule extends ModuleBase {
           platformFeeRate: defaultPlatformFeeRate,
           slippage,
           sniper,
+          txTipConfig,
           associatedOnly,
           checkCreateATAOwner,
           skipCheckMintA: !fee,
@@ -429,9 +438,12 @@ export default class LaunchpadModule extends ModuleBase {
           : undefined;
     }
 
+    const blockHash = await 
+
     txBuilder.addTipInstruction(txTipConfig);
 
     if (txVersion === TxVersion.V0) {
+      console.log("VERSION V0");
       const mintTransaction = txBuilder.sizeCheckBuildV0({
         computeBudgetConfig,
         swapInfo,
@@ -451,6 +463,7 @@ export default class LaunchpadModule extends ModuleBase {
 
     }
       
+    console.log("VERSION PLAIN");
     const transactionMint = txBuilder.sizeCheckBuild({
       computeBudgetConfig,
       swapInfo,
