@@ -305,7 +305,7 @@ export default class Account extends ModuleBase {
         initTokenAccountInstruction({
           mint,
           tokenAccount: newTokenAccount.publicKey,
-          owner: this.scope.ownerPubKey,
+          owner: owner ? owner : this.scope.ownerPubKey,
           programId: tokenProgram,
         }),
       );
