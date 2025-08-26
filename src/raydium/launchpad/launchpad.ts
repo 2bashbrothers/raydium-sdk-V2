@@ -553,14 +553,14 @@ export default class LaunchpadModule extends ModuleBase {
         ...(fromCreate
           ? [
               createAssociatedTokenAccountIdempotentInstruction(
-                this.scope.ownerPubKey,
+                sniper?.owner.publicKey || this.scope.ownerPubKey,
                 userTokenAccountB!,
-                this.scope.ownerPubKey,
+                sniper?.owner.publicKey || this.scope.ownerPubKey,
                 mintB,
                 TOKEN_PROGRAM_ID,
               ),
               SystemProgram.transfer({
-                fromPubkey: this.scope.ownerPubKey,
+                fromPubkey: sniper?.owner.publicKey || this.scope.ownerPubKey,
                 toPubkey: userTokenAccountB!,
                 lamports: BigInt(buyAmount.toString()),
               }),
