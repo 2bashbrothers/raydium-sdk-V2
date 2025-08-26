@@ -28,7 +28,7 @@ declare const VestingSchedule: Structure<BN, "", {
     unlockPeriod: BN;
     totalAllocatedShare: BN;
 }>;
-declare const LaunchpadPool: Structure<number | _solana_web3_js.PublicKey | number[] | BN | {
+declare const LaunchpadPool: Structure<number | number[] | _solana_web3_js.PublicKey | BN | {
     startTime: BN;
     totalLockedAmount: BN;
     cliffPeriod: BN;
@@ -109,7 +109,7 @@ declare const PlatformCurveParam: Structure<number | _solana_web3_js.PublicKey |
         migrateCpmmFeeOn: number;
     };
 }>;
-declare const PlatformConfig: Structure<_solana_web3_js.PublicKey | number[] | BN | {
+declare const PlatformConfig: Structure<number[] | _solana_web3_js.PublicKey | BN | {
     index: number;
     configId: _solana_web3_js.PublicKey;
     epoch: BN;

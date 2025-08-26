@@ -1,4 +1,4 @@
-export { ch as Percent, cg as _100_PERCENT } from '../api-36727790.js';
+export { ch as Percent, cg as _100_PERCENT } from '../api-020dc49a.js';
 import 'axios';
 import '../solana/type.js';
 import '@solana/web3.js';

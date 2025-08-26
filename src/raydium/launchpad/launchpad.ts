@@ -381,7 +381,6 @@ export default class LaunchpadModule extends ModuleBase {
         configInfo,
         platformFeeRate: defaultPlatformFeeRate,
         slippage,
-        txTipConfig,
         associatedOnly,
         checkCreateATAOwner,
         skipCheckMintA: !fee,
@@ -533,8 +532,12 @@ export default class LaunchpadModule extends ModuleBase {
     const userTokenAccountA = sniper 
       ? this.scope.account.getAssociatedTokenAccountByOwner(sniper.owner.publicKey, mintA, mintAProgram) 
       : this.scope.account.getAssociatedTokenAccount(mintA, mintAProgram);
+    
     let userTokenAccountB: PublicKey | null = fromCreate
-      ? this.scope.account.getAssociatedTokenAccount(mintB, TOKEN_PROGRAM_ID)
+      ? 
+        sniper
+          ? this.scope.account.getAssociatedTokenAccountByOwner(sniper.owner.publicKey, mintB, TOKEN_PROGRAM_ID) 
+          : this.scope.account.getAssociatedTokenAccount(mintB, TOKEN_PROGRAM_ID)
       : null;
     const mintBUseSOLBalance = mintB.equals(NATIVE_MINT);
 
