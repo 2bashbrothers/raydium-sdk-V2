@@ -691,6 +691,7 @@ export default class LaunchpadModule extends ModuleBase {
     });
 
     txBuilder.addCustomComputeBudget(computeBudgetConfig);
+    console.log("Adding Tip Config: ", txTipConfig);
     txBuilder.addTipInstruction(txTipConfig);
 
     return txBuilder.versionBuild<SwapInfoReturnExt>({
