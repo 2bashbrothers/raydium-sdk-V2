@@ -3,7 +3,7 @@ import * as BN from 'bn.js';
 import * as _solana_web3_js from '@solana/web3.js';
 import '../../marshmallow/buffer-layout.js';
 
-declare const ClmmConfigLayout: Structure<number | Buffer | _solana_web3_js.PublicKey | BN[], "", {
+declare const ClmmConfigLayout: Structure<number | _solana_web3_js.PublicKey | Buffer | BN[], "", {
     bump: number;
     index: number;
     tickSpacing: number;
@@ -14,7 +14,7 @@ declare const ObservationLayout: Structure<number | BN | BN[], "", {
     blockTimestamp: number;
     tickCumulative: BN;
 }>;
-declare const ObservationInfoLayout: Structure<number | boolean | BN | Buffer | _solana_web3_js.PublicKey | BN[] | {
+declare const ObservationInfoLayout: Structure<number | boolean | _solana_web3_js.PublicKey | Buffer | BN | BN[] | {
     blockTimestamp: number;
     tickCumulative: BN;
 }[], "", {
@@ -27,7 +27,7 @@ declare const ObservationInfoLayout: Structure<number | boolean | BN | Buffer | 
         tickCumulative: BN;
     }[];
 }>;
-declare const RewardInfo: Structure<number | BN | _solana_web3_js.PublicKey, "", {
+declare const RewardInfo: Structure<number | _solana_web3_js.PublicKey | BN, "", {
     rewardState: number;
     rewardClaimed: BN;
     creator: _solana_web3_js.PublicKey;
@@ -40,7 +40,7 @@ declare const RewardInfo: Structure<number | BN | _solana_web3_js.PublicKey, "",
     tokenVault: _solana_web3_js.PublicKey;
     rewardGrowthGlobalX64: BN;
 }>;
-declare const PoolInfoLayout: Structure<number | BN | number[] | Buffer | _solana_web3_js.PublicKey | BN[] | {
+declare const PoolInfoLayout: Structure<number | _solana_web3_js.PublicKey | number[] | Buffer | BN | BN[] | {
     rewardState: number;
     rewardClaimed: BN;
     creator: _solana_web3_js.PublicKey;
@@ -103,7 +103,7 @@ declare const PositionRewardInfoLayout: Structure<BN, "", {
     growthInsideLastX64: BN;
     rewardAmountOwed: BN;
 }>;
-declare const PositionInfoLayout: Structure<number | BN | Buffer | _solana_web3_js.PublicKey | BN[] | {
+declare const PositionInfoLayout: Structure<number | _solana_web3_js.PublicKey | Buffer | BN | BN[] | {
     growthInsideLastX64: BN;
     rewardAmountOwed: BN;
 }[], "", {
@@ -123,7 +123,7 @@ declare const PositionInfoLayout: Structure<number | BN | Buffer | _solana_web3_
     tokenFeesOwedB: BN;
 }>;
 declare type ClmmPositionLayout = ReturnType<typeof PositionInfoLayout.decode>;
-declare const ProtocolPositionLayout: Structure<number | BN | Buffer | _solana_web3_js.PublicKey | BN[], "", {
+declare const ProtocolPositionLayout: Structure<number | _solana_web3_js.PublicKey | Buffer | BN | BN[], "", {
     bump: number;
     poolId: _solana_web3_js.PublicKey;
     liquidity: BN;
@@ -135,7 +135,7 @@ declare const ProtocolPositionLayout: Structure<number | BN | Buffer | _solana_w
     tickUpperIndex: number;
     rewardGrowthInside: BN[];
 }>;
-declare const TickLayout: Structure<number | BN | number[] | BN[], "", {
+declare const TickLayout: Structure<number | number[] | BN | BN[], "", {
     tick: number;
     liquidityNet: BN;
     liquidityGross: BN;
@@ -143,7 +143,7 @@ declare const TickLayout: Structure<number | BN | number[] | BN[], "", {
     feeGrowthOutsideX64B: BN;
     rewardGrowthsOutsideX64: BN[];
 }>;
-declare const TickArrayLayout: Structure<number | number[] | Buffer | _solana_web3_js.PublicKey | {
+declare const TickArrayLayout: Structure<number | _solana_web3_js.PublicKey | number[] | Buffer | {
     tick: number;
     liquidityNet: BN;
     liquidityGross: BN;
@@ -163,22 +163,22 @@ declare const TickArrayLayout: Structure<number | number[] | Buffer | _solana_we
     }[];
     initializedTickCount: number;
 }>;
-declare const OperationLayout: Structure<Buffer | _solana_web3_js.PublicKey[], "", {
+declare const OperationLayout: Structure<_solana_web3_js.PublicKey[] | Buffer, "", {
     whitelistMints: _solana_web3_js.PublicKey[];
 }>;
-declare const TickArrayBitmapExtensionLayout: Structure<Buffer | _solana_web3_js.PublicKey | BN[][], "", {
+declare const TickArrayBitmapExtensionLayout: Structure<_solana_web3_js.PublicKey | Buffer | BN[][], "", {
     poolId: _solana_web3_js.PublicKey;
     positiveTickArrayBitmap: BN[][];
     negativeTickArrayBitmap: BN[][];
 }>;
-declare const LockPositionLayout: Structure<number | BN | _solana_web3_js.PublicKey | BN[], "", {
+declare const LockPositionLayout: Structure<number | _solana_web3_js.PublicKey | BN | BN[], "", {
     owner: _solana_web3_js.PublicKey;
     bump: number;
     poolId: _solana_web3_js.PublicKey;
     positionId: _solana_web3_js.PublicKey;
     nftAccount: _solana_web3_js.PublicKey;
 }>;
-declare const LockClPositionLayoutV2: Structure<number | BN | Buffer | _solana_web3_js.PublicKey | BN[], "", {
+declare const LockClPositionLayoutV2: Structure<number | _solana_web3_js.PublicKey | Buffer | BN | BN[], "", {
     bump: number;
     poolId: _solana_web3_js.PublicKey;
     lockOwner: _solana_web3_js.PublicKey;

@@ -1,9 +1,9 @@
 import { Structure } from '../../marshmallow/index.js';
-import * as _solana_web3_js from '@solana/web3.js';
 import * as BN from 'bn.js';
+import * as _solana_web3_js from '@solana/web3.js';
 import '../../marshmallow/buffer-layout.js';
 
-declare const splAccountLayout: Structure<number | BN | _solana_web3_js.PublicKey, "", {
+declare const splAccountLayout: Structure<number | _solana_web3_js.PublicKey | BN, "", {
     state: number;
     owner: _solana_web3_js.PublicKey;
     amount: BN;

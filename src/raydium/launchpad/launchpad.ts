@@ -381,6 +381,7 @@ export default class LaunchpadModule extends ModuleBase {
         configInfo,
         platformFeeRate: defaultPlatformFeeRate,
         slippage,
+        txTipConfig,
         associatedOnly,
         checkCreateATAOwner,
         skipCheckMintA: !fee,

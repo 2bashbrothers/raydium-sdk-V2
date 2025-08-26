@@ -1,9 +1,9 @@
 import { Structure } from '../../marshmallow/index.js';
-import * as _solana_web3_js from '@solana/web3.js';
 import * as BN from 'bn.js';
+import * as _solana_web3_js from '@solana/web3.js';
 import '../../marshmallow/buffer-layout.js';
 
-declare const LaunchpadConfig: Structure<number | BN | _solana_web3_js.PublicKey | BN[], "", {
+declare const LaunchpadConfig: Structure<number | _solana_web3_js.PublicKey | BN | BN[], "", {
     index: number;
     mintB: _solana_web3_js.PublicKey;
     tradeFeeRate: BN;
@@ -28,7 +28,7 @@ declare const VestingSchedule: Structure<BN, "", {
     unlockPeriod: BN;
     totalAllocatedShare: BN;
 }>;
-declare const LaunchpadPool: Structure<number | BN | number[] | _solana_web3_js.PublicKey | {
+declare const LaunchpadPool: Structure<number | _solana_web3_js.PublicKey | number[] | BN | {
     startTime: BN;
     totalLockedAmount: BN;
     cliffPeriod: BN;
@@ -68,7 +68,7 @@ declare const LaunchpadPool: Structure<number | BN | number[] | _solana_web3_js.
     mintProgramFlag: number;
     cpmmCreatorFeeOn: number;
 }>;
-declare const LaunchpadVesting: Structure<BN | _solana_web3_js.PublicKey | BN[], "", {
+declare const LaunchpadVesting: Structure<_solana_web3_js.PublicKey | BN | BN[], "", {
     poolId: _solana_web3_js.PublicKey;
     epoch: BN;
     claimedAmount: BN;
@@ -85,7 +85,7 @@ declare const BondingCurveParam: Structure<number | BN, "", {
     totalFundRaisingB: BN;
     migrateCpmmFeeOn: number;
 }>;
-declare const PlatformCurveParam: Structure<number | BN | _solana_web3_js.PublicKey | BN[] | {
+declare const PlatformCurveParam: Structure<number | _solana_web3_js.PublicKey | BN | BN[] | {
     supply: BN;
     totalLockedAmount: BN;
     cliffPeriod: BN;
@@ -109,7 +109,7 @@ declare const PlatformCurveParam: Structure<number | BN | _solana_web3_js.Public
         migrateCpmmFeeOn: number;
     };
 }>;
-declare const PlatformConfig: Structure<BN | number[] | _solana_web3_js.PublicKey | {
+declare const PlatformConfig: Structure<_solana_web3_js.PublicKey | number[] | BN | {
     index: number;
     configId: _solana_web3_js.PublicKey;
     epoch: BN;

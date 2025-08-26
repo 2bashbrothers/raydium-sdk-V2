@@ -1,9 +1,9 @@
 import { Structure } from '../../marshmallow/index.js';
-import * as _solana_web3_js from '@solana/web3.js';
 import * as BN from 'bn.js';
+import * as _solana_web3_js from '@solana/web3.js';
 import { GetStructureSchema } from '../../marshmallow/buffer-layout.js';
 
-declare const MARKET_STATE_LAYOUT_V3: Structure<BN | Buffer | _solana_web3_js.PublicKey, "", {
+declare const MARKET_STATE_LAYOUT_V3: Structure<_solana_web3_js.PublicKey | Buffer | BN, "", {
     baseMint: _solana_web3_js.PublicKey;
     quoteMint: _solana_web3_js.PublicKey;
     ownAddress: _solana_web3_js.PublicKey;

@@ -1,9 +1,9 @@
 import { Structure } from '../../marshmallow/index.js';
-import * as _solana_web3_js from '@solana/web3.js';
 import * as BN from 'bn.js';
+import * as _solana_web3_js from '@solana/web3.js';
 import '../../marshmallow/buffer-layout.js';
 
-declare const CpmmConfigInfoLayout: Structure<number | boolean | BN | Buffer | _solana_web3_js.PublicKey | BN[], "", {
+declare const CpmmConfigInfoLayout: Structure<number | boolean | _solana_web3_js.PublicKey | Buffer | BN | BN[], "", {
     bump: number;
     index: number;
     protocolFeeRate: BN;
@@ -15,7 +15,7 @@ declare const CpmmConfigInfoLayout: Structure<number | boolean | BN | Buffer | _
     fundOwner: _solana_web3_js.PublicKey;
     creatorFeeRate: BN;
 }>;
-declare const CpmmPoolInfoLayout: Structure<number | boolean | BN | number[] | Buffer | _solana_web3_js.PublicKey | BN[], "", {
+declare const CpmmPoolInfoLayout: Structure<number | boolean | _solana_web3_js.PublicKey | number[] | Buffer | BN | BN[], "", {
     bump: number;
     openTime: BN;
     status: number;
@@ -43,7 +43,7 @@ declare const CpmmPoolInfoLayout: Structure<number | boolean | BN | number[] | B
     creatorFeesMintA: BN;
     creatorFeesMintB: BN;
 }>;
-declare const CpmmPermission: Structure<Buffer | _solana_web3_js.PublicKey | BN[], "", {
+declare const CpmmPermission: Structure<_solana_web3_js.PublicKey | Buffer | BN[], "", {
     configId: _solana_web3_js.PublicKey;
 }>;
 

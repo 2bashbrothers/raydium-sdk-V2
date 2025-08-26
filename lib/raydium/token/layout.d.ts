@@ -1,9 +1,9 @@
 import { Structure } from '../../marshmallow/index.js';
-import * as _solana_web3_js from '@solana/web3.js';
 import * as BN from 'bn.js';
+import * as _solana_web3_js from '@solana/web3.js';
 import '../../marshmallow/buffer-layout.js';
 
-declare const SPL_MINT_LAYOUT: Structure<number | BN | _solana_web3_js.PublicKey, "", {
+declare const SPL_MINT_LAYOUT: Structure<number | _solana_web3_js.PublicKey | BN, "", {
     decimals: number;
     freezeAuthority: _solana_web3_js.PublicKey;
     mintAuthority: _solana_web3_js.PublicKey;

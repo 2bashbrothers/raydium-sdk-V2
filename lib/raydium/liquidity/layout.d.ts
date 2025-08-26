@@ -22,7 +22,7 @@ declare const initPoolLayout: Structure<number | BN, "", {
     instruction: number;
     startTime: BN;
 }>;
-declare const liquidityStateV4Layout: Structure<BN | _solana_web3_js.PublicKey | BN[], "", {
+declare const liquidityStateV4Layout: Structure<_solana_web3_js.PublicKey | BN | BN[], "", {
     nonce: BN;
     state: BN;
     lpVault: _solana_web3_js.PublicKey;
@@ -78,7 +78,7 @@ declare const liquidityStateV4Layout: Structure<BN | _solana_web3_js.PublicKey |
 }>;
 declare type LiquidityStateLayoutV4 = typeof liquidityStateV4Layout;
 declare type LiquidityStateV4 = GetStructureSchema<LiquidityStateLayoutV4>;
-declare const liquidityStateV5Layout: Structure<BN | _solana_web3_js.PublicKey | BN[], "", {
+declare const liquidityStateV5Layout: Structure<_solana_web3_js.PublicKey | BN | BN[], "", {
     nonce: BN;
     state: BN;
     lpMint: _solana_web3_js.PublicKey;
