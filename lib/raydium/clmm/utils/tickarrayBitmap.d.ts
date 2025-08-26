@@ -1,22 +1,8 @@
 import BN__default from 'bn.js';
-import { T as TickArrayBitmapExtensionType } from '../../../type-4f8e9671.js';
-import '@solana/web3.js';
-import 'decimal.js';
-import '../../../api-734bb3fa.js';
-import 'axios';
-import '../../../solana/type.js';
-import '@solana/spl-token';
-import '../../../api/url.js';
-import '../../../common/owner.js';
-import '../../../common/txTool/lookupTable.js';
-import '../../../common/txTool/txType.js';
-import '../../../module/token.js';
-import '../../../common/pubKey.js';
-import '../../../common/logger.js';
-import '../../../module/currency.js';
+import { TickArrayBitmapExtensionLayout } from '../layout.js';
 import '../../../marshmallow/index.js';
+import '@solana/web3.js';
 import '../../../marshmallow/buffer-layout.js';
-import '../layout.js';
 
 declare const EXTENSION_TICKARRAY_BITMAP_SIZE = 14;
 declare class TickArrayBitmap {
@@ -32,7 +18,7 @@ declare class TickArrayBitmap {
 }
 declare class TickArrayBitmapExtensionUtils {
     static getBitmapOffset(tickIndex: number, tickSpacing: number): number;
-    static getBitmap(tickIndex: number, tickSpacing: number, tickArrayBitmapExtension: TickArrayBitmapExtensionType): {
+    static getBitmap(tickIndex: number, tickSpacing: number, tickArrayBitmapExtension: ReturnType<typeof TickArrayBitmapExtensionLayout.decode>): {
         offset: number;
         tickarrayBitmap: BN__default[];
     };
@@ -41,11 +27,11 @@ declare class TickArrayBitmapExtensionUtils {
         positiveTickBoundary: number;
         negativeTickBoundary: number;
     };
-    static checkTickArrayIsInit(tickArrayStartIndex: number, tickSpacing: number, tickArrayBitmapExtension: TickArrayBitmapExtensionType): {
+    static checkTickArrayIsInit(tickArrayStartIndex: number, tickSpacing: number, tickArrayBitmapExtension: ReturnType<typeof TickArrayBitmapExtensionLayout.decode>): {
         isInitialized: boolean;
         startIndex: number;
     };
-    static nextInitializedTickArrayFromOneBitmap(lastTickArrayStartIndex: number, tickSpacing: number, zeroForOne: boolean, tickArrayBitmapExtension: TickArrayBitmapExtensionType): {
+    static nextInitializedTickArrayFromOneBitmap(lastTickArrayStartIndex: number, tickSpacing: number, zeroForOne: boolean, tickArrayBitmapExtension: ReturnType<typeof TickArrayBitmapExtensionLayout.decode>): {
         isInit: boolean;
         tickIndex: number;
     };

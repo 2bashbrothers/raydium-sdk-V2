@@ -28,7 +28,7 @@ declare const VestingSchedule: Structure<BN, "", {
     unlockPeriod: BN;
     totalAllocatedShare: BN;
 }>;
-declare const LaunchpadPool: Structure<number | number[] | _solana_web3_js.PublicKey | BN | {
+declare const LaunchpadPool: Structure<number | _solana_web3_js.PublicKey | number[] | BN | {
     startTime: BN;
     totalLockedAmount: BN;
     cliffPeriod: BN;
@@ -47,6 +47,7 @@ declare const LaunchpadPool: Structure<number | number[] | _solana_web3_js.Publi
     supply: BN;
     configId: _solana_web3_js.PublicKey;
     epoch: BN;
+    protocolFee: BN;
     migrateFee: BN;
     migrateType: number;
     totalSellA: BN;
@@ -55,7 +56,6 @@ declare const LaunchpadPool: Structure<number | number[] | _solana_web3_js.Publi
     realA: BN;
     realB: BN;
     totalFundRaisingB: BN;
-    protocolFee: BN;
     platformFee: BN;
     vestingSchedule: {
         startTime: BN;
@@ -66,18 +66,68 @@ declare const LaunchpadPool: Structure<number | number[] | _solana_web3_js.Publi
     };
     platformId: _solana_web3_js.PublicKey;
     mintProgramFlag: number;
+    cpmmCreatorFeeOn: number;
 }>;
 declare const LaunchpadVesting: Structure<_solana_web3_js.PublicKey | BN | BN[], "", {
     poolId: _solana_web3_js.PublicKey;
-    claimedAmount: BN;
     epoch: BN;
+    claimedAmount: BN;
     beneficiary: _solana_web3_js.PublicKey;
     tokenShareAmount: BN;
 }>;
-declare const PlatformConfig: Structure<number[] | _solana_web3_js.PublicKey | BN, "", {
+declare const BondingCurveParam: Structure<number | BN, "", {
+    supply: BN;
+    totalLockedAmount: BN;
+    cliffPeriod: BN;
+    unlockPeriod: BN;
+    migrateType: number;
+    totalSellA: BN;
+    totalFundRaisingB: BN;
+    migrateCpmmFeeOn: number;
+}>;
+declare const PlatformCurveParam: Structure<number | _solana_web3_js.PublicKey | BN | BN[] | {
+    supply: BN;
+    totalLockedAmount: BN;
+    cliffPeriod: BN;
+    unlockPeriod: BN;
+    migrateType: number;
+    totalSellA: BN;
+    totalFundRaisingB: BN;
+    migrateCpmmFeeOn: number;
+}, "", {
+    index: number;
+    configId: _solana_web3_js.PublicKey;
+    epoch: BN;
+    bondingCurveParam: {
+        supply: BN;
+        totalLockedAmount: BN;
+        cliffPeriod: BN;
+        unlockPeriod: BN;
+        migrateType: number;
+        totalSellA: BN;
+        totalFundRaisingB: BN;
+        migrateCpmmFeeOn: number;
+    };
+}>;
+declare const PlatformConfig: Structure<_solana_web3_js.PublicKey | number[] | BN | {
+    index: number;
+    configId: _solana_web3_js.PublicKey;
+    epoch: BN;
+    bondingCurveParam: {
+        supply: BN;
+        totalLockedAmount: BN;
+        cliffPeriod: BN;
+        unlockPeriod: BN;
+        migrateType: number;
+        totalSellA: BN;
+        totalFundRaisingB: BN;
+        migrateCpmmFeeOn: number;
+    };
+}[], "", {
     name: number[];
     feeRate: BN;
     epoch: BN;
+    creatorFeeRate: BN;
     platformClaimFeeWallet: _solana_web3_js.PublicKey;
     platformLockNftWallet: _solana_web3_js.PublicKey;
     platformScale: BN;
@@ -86,8 +136,22 @@ declare const PlatformConfig: Structure<number[] | _solana_web3_js.PublicKey | B
     web: number[];
     img: number[];
     cpConfigId: _solana_web3_js.PublicKey;
-    creatorFeeRate: BN;
     transferFeeExtensionAuth: _solana_web3_js.PublicKey;
+    platformCurve: {
+        index: number;
+        configId: _solana_web3_js.PublicKey;
+        epoch: BN;
+        bondingCurveParam: {
+            supply: BN;
+            totalLockedAmount: BN;
+            cliffPeriod: BN;
+            unlockPeriod: BN;
+            migrateType: number;
+            totalSellA: BN;
+            totalFundRaisingB: BN;
+            migrateCpmmFeeOn: number;
+        };
+    }[];
 }>;
 
-export { LaunchpadConfig, LaunchpadPool, LaunchpadVesting, PlatformConfig, VestingSchedule };
+export { BondingCurveParam, LaunchpadConfig, LaunchpadPool, LaunchpadVesting, PlatformConfig, PlatformCurveParam, VestingSchedule };

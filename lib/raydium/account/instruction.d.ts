@@ -1,5 +1,5 @@
 import { PublicKey, TransactionInstruction, Signer, Connection, Commitment } from '@solana/web3.js';
-import { ay as AddInstructionParam, af as BigNumberish } from '../../api-734bb3fa.js';
+import { ax as AddInstructionParam, af as BigNumberish } from '../../api-36727790.js';
 import 'axios';
 import '../../solana/type.js';
 import 'bn.js';

@@ -1,7 +1,7 @@
 import BN__default from 'bn.js';
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
-import { r as ApiV3PoolInfoStandardItemCpmm, z as CpmmKeys, bO as ReturnTypeMakeInstructions } from '../../api-734bb3fa.js';
-import { CpmmLockExtInfo } from './type.js';
+import { r as ApiV3PoolInfoStandardItemCpmm, z as CpmmKeys, bN as ReturnTypeMakeInstructions } from '../../api-36727790.js';
+import { CpmmLockExtInfo, FeeOn } from './type.js';
 import 'axios';
 import '../../solana/type.js';
 import '@solana/spl-token';
@@ -77,5 +77,7 @@ declare function collectCpFeeInstruction({ programId, nftOwner, auth, nftAccount
     cpmmProgram?: PublicKey;
     cpmmAuthProgram?: PublicKey;
 }): TransactionInstruction;
+declare function makeCollectCreatorFeeInstruction(programId: PublicKey, creator: PublicKey, authority: PublicKey, poolId: PublicKey, configId: PublicKey, vaultA: PublicKey, vaultB: PublicKey, mintA: PublicKey, mintB: PublicKey, ownerVaultA: PublicKey, ownerVaultB: PublicKey, mintProgramA: PublicKey, mintProgramB: PublicKey): TransactionInstruction;
+declare function initializeWithPermission(programId: PublicKey, payer: PublicKey, creator: PublicKey, configId: PublicKey, authority: PublicKey, poolId: PublicKey, mintA: PublicKey, mintB: PublicKey, lpMint: PublicKey, payerVaultA: PublicKey, payerVaultB: PublicKey, payerLpAccount: PublicKey, vaultA: PublicKey, vaultB: PublicKey, createPoolFeeAccount: PublicKey, mintProgramA: PublicKey, mintProgramB: PublicKey, observationId: PublicKey, permissionPda: PublicKey, amountA: BN__default, amountB: BN__default, openTime: BN__default, feeOn: FeeOn): TransactionInstruction;
 
-export { collectCpFeeInstruction, cpmmLockPositionInstruction, makeCpmmLockInstruction, makeCreateCpmmPoolInInstruction, makeDepositCpmmInInstruction, makeSwapCpmmBaseInInstruction, makeSwapCpmmBaseOutInstruction, makeWithdrawCpmmInInstruction };
+export { collectCpFeeInstruction, cpmmLockPositionInstruction, initializeWithPermission, makeCollectCreatorFeeInstruction, makeCpmmLockInstruction, makeCreateCpmmPoolInInstruction, makeDepositCpmmInInstruction, makeSwapCpmmBaseInInstruction, makeSwapCpmmBaseOutInstruction, makeWithdrawCpmmInInstruction };

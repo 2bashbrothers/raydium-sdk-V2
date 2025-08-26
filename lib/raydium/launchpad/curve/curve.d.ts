@@ -1,7 +1,7 @@
 import { TransferFeeConfig } from '@solana/spl-token';
 import BN__default from 'bn.js';
 import Decimal from 'decimal.js';
-import { bY as GetTransferAmountFee } from '../../../api-734bb3fa.js';
+import { bX as GetTransferAmountFee } from '../../../api-36727790.js';
 import { LaunchpadPool, LaunchpadConfig } from '../layout.js';
 import { PoolBaseAmount, CurveBase } from './curveBase.js';
 import 'axios';

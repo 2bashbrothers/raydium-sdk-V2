@@ -13,8 +13,9 @@ declare const CpmmConfigInfoLayout: Structure<number | boolean | _solana_web3_js
     createPoolFee: BN;
     protocolOwner: _solana_web3_js.PublicKey;
     fundOwner: _solana_web3_js.PublicKey;
+    creatorFeeRate: BN;
 }>;
-declare const CpmmPoolInfoLayout: Structure<number | _solana_web3_js.PublicKey | Buffer | BN | BN[], "", {
+declare const CpmmPoolInfoLayout: Structure<number | boolean | _solana_web3_js.PublicKey | number[] | Buffer | BN | BN[], "", {
     bump: number;
     openTime: BN;
     status: number;
@@ -36,6 +37,14 @@ declare const CpmmPoolInfoLayout: Structure<number | _solana_web3_js.PublicKey |
     protocolFeesMintB: BN;
     fundFeesMintA: BN;
     fundFeesMintB: BN;
+    epoch: BN;
+    feeOn: number;
+    enableCreatorFee: boolean;
+    creatorFeesMintA: BN;
+    creatorFeesMintB: BN;
+}>;
+declare const CpmmPermission: Structure<_solana_web3_js.PublicKey | Buffer | BN[], "", {
+    configId: _solana_web3_js.PublicKey;
 }>;
 
-export { CpmmConfigInfoLayout, CpmmPoolInfoLayout };
+export { CpmmConfigInfoLayout, CpmmPermission, CpmmPoolInfoLayout };

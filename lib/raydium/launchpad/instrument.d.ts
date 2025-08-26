@@ -1,8 +1,26 @@
 import { PublicKey, TransactionInstruction } from '@solana/web3.js';
 import BN__default from 'bn.js';
+import { BondingCurveParam } from './layout.js';
+import { CpmmCreatorFeeOn } from './type.js';
+import '../../marshmallow/index.js';
+import '../../marshmallow/buffer-layout.js';
+import '../../api-36727790.js';
+import 'axios';
+import '../../solana/type.js';
+import '@solana/spl-token';
+import '../../api/url.js';
+import '../../common/owner.js';
+import '../../common/txTool/lookupTable.js';
+import '../../common/txTool/txType.js';
+import 'decimal.js';
+import '../../module/token.js';
+import '../../common/pubKey.js';
+import '../../common/logger.js';
+import '../../module/currency.js';
 
 declare const anchorDataBuf: {
     initialize: Buffer;
+    initializeV2: Buffer;
     buyExactIn: Buffer;
     buyExactOut: Buffer;
     sellExactIn: Buffer;
@@ -15,6 +33,8 @@ declare const anchorDataBuf: {
     initializeWithToken2022: Buffer;
     claimPlatformFeeFromVault: Buffer;
     claimCreatorFee: Buffer;
+    updatePlatformCurveParam: Buffer;
+    removePlatformCurveParam: Buffer;
 };
 declare function initialize(programId: PublicKey, payer: PublicKey, creator: PublicKey, configId: PublicKey, platformId: PublicKey, auth: PublicKey, poolId: PublicKey, mintA: PublicKey, mintB: PublicKey, vaultA: PublicKey, vaultB: PublicKey, metadataId: PublicKey, decimals: number, name: string, symbol: string, uri: string, curveParam: ({
     type: "ConstantCurve";
@@ -28,6 +48,18 @@ declare function initialize(programId: PublicKey, payer: PublicKey, creator: Pub
     supply: BN__default;
     totalFundRaisingB: BN__default;
 }, totalLockedAmount: BN__default, cliffPeriod: BN__default, unlockPeriod: BN__default): TransactionInstruction;
+declare function initializeV2(programId: PublicKey, payer: PublicKey, creator: PublicKey, configId: PublicKey, platformId: PublicKey, auth: PublicKey, poolId: PublicKey, mintA: PublicKey, mintB: PublicKey, vaultA: PublicKey, vaultB: PublicKey, metadataId: PublicKey, decimals: number, name: string, symbol: string, uri: string, curveParam: ({
+    type: "ConstantCurve";
+    totalSellA: BN__default;
+} | {
+    type: "FixedCurve";
+} | {
+    type: "LinearCurve";
+}) & {
+    migrateType: "amm" | "cpmm";
+    supply: BN__default;
+    totalFundRaisingB: BN__default;
+}, totalLockedAmount: BN__default, cliffPeriod: BN__default, unlockPeriod: BN__default, cpmmCreatorFeeOn: CpmmCreatorFeeOn): TransactionInstruction;
 declare function initializeWithToken2022(programId: PublicKey, payer: PublicKey, creator: PublicKey, configId: PublicKey, platformId: PublicKey, auth: PublicKey, poolId: PublicKey, mintA: PublicKey, mintB: PublicKey, vaultA: PublicKey, vaultB: PublicKey, decimals: number, name: string, symbol: string, uri: string, curveParam: ({
     type: "ConstantCurve";
     totalSellA: BN__default;
@@ -39,7 +71,7 @@ declare function initializeWithToken2022(programId: PublicKey, payer: PublicKey,
     migrateType: "amm" | "cpmm";
     supply: BN__default;
     totalFundRaisingB: BN__default;
-}, totalLockedAmount: BN__default, cliffPeriod: BN__default, unlockPeriod: BN__default, transferFeeExtensionParams?: {
+}, totalLockedAmount: BN__default, cliffPeriod: BN__default, unlockPeriod: BN__default, cpmmCreatorFeeOn: CpmmCreatorFeeOn, transferFeeExtensionParams?: {
     transferFeeBasePoints: number;
     maxinumFee: BN__default;
 }): TransactionInstruction;
@@ -95,5 +127,7 @@ declare function updatePlatformConfig(programId: PublicKey, platformAdmin: Publi
 }): TransactionInstruction;
 declare function claimPlatformFeeFromVault(programId: PublicKey, platformId: PublicKey, platformClaimFeeWallet: PublicKey, platformClaimFeeAuth: PublicKey, platformClaimFeeVault: PublicKey, recipientTokenAccount: PublicKey, mintB: PublicKey, mintProgramB: PublicKey): TransactionInstruction;
 declare function claimCreatorFee(programId: PublicKey, creator: PublicKey, creatorClaimFeeAuth: PublicKey, creatorClaimFeeVault: PublicKey, recipientTokenAccount: PublicKey, mintB: PublicKey, mintProgramB: PublicKey): TransactionInstruction;
+declare function updatePlatformCurveParamInstruction(programId: PublicKey, platformAdmin: PublicKey, platformId: PublicKey, configId: PublicKey, index: number, params: Partial<ReturnType<typeof BondingCurveParam.decode>>): TransactionInstruction;
+declare function removePlatformCurveParamInstruction(programId: PublicKey, platformAdmin: PublicKey, platformId: PublicKey, index: number): TransactionInstruction;
 
-export { anchorDataBuf, buyExactInInstruction, buyExactOutInstruction, claimCreatorFee, claimPlatformFee, claimPlatformFeeFromVault, claimVestedToken, createPlatformConfig, createVestingAccount, initialize, initializeWithToken2022, sellExactInInstruction, sellExactOut, updatePlatformConfig };
+export { anchorDataBuf, buyExactInInstruction, buyExactOutInstruction, claimCreatorFee, claimPlatformFee, claimPlatformFeeFromVault, claimVestedToken, createPlatformConfig, createVestingAccount, initialize, initializeV2, initializeWithToken2022, removePlatformCurveParamInstruction, sellExactInInstruction, sellExactOut, updatePlatformConfig, updatePlatformCurveParamInstruction };

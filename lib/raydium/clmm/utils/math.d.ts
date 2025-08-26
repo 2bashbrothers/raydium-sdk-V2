@@ -1,8 +1,9 @@
 import { EpochInfo, PublicKey } from '@solana/web3.js';
 import BN__default from 'bn.js';
 import Decimal from 'decimal.js';
-import { p as ApiV3PoolInfoConcentratedItem } from '../../../api-734bb3fa.js';
-import { g as ReturnTypeGetLiquidityAmountOut, W as TickArray, T as TickArrayBitmapExtensionType } from '../../../type-4f8e9671.js';
+import { p as ApiV3PoolInfoConcentratedItem } from '../../../api-36727790.js';
+import { g as ReturnTypeGetLiquidityAmountOut, Q as TickArray } from '../../../type-3401c86a.js';
+import { TickArrayBitmapExtensionLayout } from '../layout.js';
 import 'axios';
 import '../../../solana/type.js';
 import '@solana/spl-token';
@@ -16,7 +17,6 @@ import '../../../common/logger.js';
 import '../../../module/currency.js';
 import '../../../marshmallow/index.js';
 import '../../../marshmallow/buffer-layout.js';
-import '../layout.js';
 
 declare class MathUtil {
     static mulDivRoundingUp(a: BN__default, b: BN__default, denominator: BN__default): BN__default;
@@ -79,7 +79,7 @@ interface StepComputations {
 declare abstract class SwapMath {
     static swapCompute(programId: PublicKey, poolId: PublicKey, tickArrayCache: {
         [key: string]: TickArray;
-    }, tickArrayBitmap: BN__default[], tickarrayBitmapExtension: TickArrayBitmapExtensionType, zeroForOne: boolean, fee: number, liquidity: BN__default, currentTick: number, tickSpacing: number, currentSqrtPriceX64: BN__default, amountSpecified: BN__default, lastSavedTickArrayStartIndex: number, sqrtPriceLimitX64?: BN__default, catchLiquidityInsufficient?: boolean): {
+    }, tickArrayBitmap: BN__default[], tickarrayBitmapExtension: ReturnType<typeof TickArrayBitmapExtensionLayout.decode>, zeroForOne: boolean, fee: number, liquidity: BN__default, currentTick: number, tickSpacing: number, currentSqrtPriceX64: BN__default, amountSpecified: BN__default, lastSavedTickArrayStartIndex: number, sqrtPriceLimitX64?: BN__default, catchLiquidityInsufficient?: boolean): {
         allTrade: boolean;
         amountSpecifiedRemaining: BN__default;
         amountCalculated: BN__default;

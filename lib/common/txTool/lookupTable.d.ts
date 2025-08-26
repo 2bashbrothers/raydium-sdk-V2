@@ -9,7 +9,8 @@ declare function getMultipleLookupTableInfo({ connection, address, cluster, }: {
     cluster?: "mainnet" | "devnet";
 }): Promise<CacheLTA>;
 declare const LOOKUP_TABLE_CACHE: CacheLTA;
+declare const getMainLookupTableCache: (connection: Connection) => Promise<CacheLTA>;
 declare const DEV_LOOKUP_TABLE_CACHE: CacheLTA;
 declare const getDevLookupTableCache: (connection: Connection) => Promise<CacheLTA>;
 
-export { CacheLTA, DEV_LOOKUP_TABLE_CACHE, LOOKUP_TABLE_CACHE, getDevLookupTableCache, getMultipleLookupTableInfo };
+export { CacheLTA, DEV_LOOKUP_TABLE_CACHE, LOOKUP_TABLE_CACHE, getDevLookupTableCache, getMainLookupTableCache, getMultipleLookupTableInfo };

@@ -1,10 +1,10 @@
 import { PublicKey, EpochInfo } from '@solana/web3.js';
 import BN__default from 'bn.js';
 import Decimal from 'decimal.js';
-import { i as ApiV3Token, f as ApiCpmmConfigInfo, bU as ComputeBudgetConfig, bV as TxTipConfig, r as ApiV3PoolInfoStandardItemCpmm, z as CpmmKeys, ci as Percent, bY as GetTransferAmountFee } from '../../api-734bb3fa.js';
+import { i as ApiV3Token, f as ApiCpmmConfigInfo, bT as ComputeBudgetConfig, bU as TxTipConfig, r as ApiV3PoolInfoStandardItemCpmm, z as CpmmKeys, ch as Percent, bX as GetTransferAmountFee } from '../../api-36727790.js';
 import { TxVersion } from '../../common/txTool/txType.js';
 import { SwapResult } from './curve/calculator.js';
-import { CpmmPoolInfoLayout } from './layout.js';
+import { CpmmPoolInfoLayout, CpmmConfigInfoLayout } from './layout.js';
 import 'axios';
 import '../../solana/type.js';
 import '@solana/spl-token';
@@ -18,40 +18,6 @@ import '../../module/currency.js';
 import '../../marshmallow/index.js';
 import '../../marshmallow/buffer-layout.js';
 
-interface CpmmConfigInfoInterface {
-    bump: number;
-    disableCreatePool: boolean;
-    index: number;
-    tradeFeeRate: BN__default;
-    protocolFeeRate: BN__default;
-    fundFeeRate: BN__default;
-    createPoolFee: BN__default;
-    protocolOwner: PublicKey;
-    fundOwner: PublicKey;
-}
-interface CpmmPoolInfoInterface {
-    configId: PublicKey;
-    poolCreator: PublicKey;
-    vaultA: PublicKey;
-    vaultB: PublicKey;
-    mintLp: PublicKey;
-    mintA: PublicKey;
-    mintB: PublicKey;
-    mintProgramA: PublicKey;
-    mintProgramB: PublicKey;
-    observationId: PublicKey;
-    bump: number;
-    status: number;
-    lpDecimals: number;
-    mintDecimalA: number;
-    mintDecimalB: number;
-    lpAmount: BN__default;
-    protocolFeesMintA: BN__default;
-    protocolFeesMintB: BN__default;
-    fundFeesMintA: BN__default;
-    fundFeesMintB: BN__default;
-    openTime: BN__default;
-}
 interface CreateCpmmPoolParam<T> {
     poolId?: PublicKey;
     programId: PublicKey;
@@ -72,6 +38,28 @@ interface CreateCpmmPoolParam<T> {
     txVersion?: T;
     txTipConfig?: TxTipConfig;
     feePayer?: PublicKey;
+}
+interface CreateCpmmPoolPermissionParam<T> {
+    poolId?: PublicKey;
+    programId: PublicKey;
+    poolFeeAccount: PublicKey;
+    mintA: Pick<ApiV3Token, "address" | "decimals" | "programId">;
+    mintB: Pick<ApiV3Token, "address" | "decimals" | "programId">;
+    mintAAmount: BN__default;
+    mintBAmount: BN__default;
+    startTime: BN__default;
+    feeConfig: ApiCpmmConfigInfo;
+    associatedOnly: boolean;
+    checkCreateATAOwner?: boolean;
+    ownerInfo: {
+        feePayer?: PublicKey;
+        useSOLBalance?: boolean;
+    };
+    computeBudgetConfig?: ComputeBudgetConfig;
+    txVersion?: T;
+    txTipConfig?: TxTipConfig;
+    feePayer?: PublicKey;
+    feeOn: FeeOn;
 }
 interface CreateCpmmPoolAddress {
     poolId: PublicKey;
@@ -128,7 +116,7 @@ interface CpmmSwapParams<T = TxVersion.LEGACY> {
     baseIn: boolean;
     fixedOut?: boolean;
     slippage?: number;
-    swapResult: Pick<SwapResult, "sourceAmountSwapped" | "destinationAmountSwapped">;
+    swapResult: Pick<SwapResult, "inputAmount" | "outputAmount">;
     inputAmount: BN__default;
     config?: {
         bypassAssociatedCheck?: boolean;
@@ -149,23 +137,23 @@ interface ComputePairAmountParams {
     epochInfo: EpochInfo;
     baseIn?: boolean;
 }
-declare type CpmmRpcData = ReturnType<typeof CpmmPoolInfoLayout.decode> & {
+declare type CpmmParsedRpcData = ReturnType<typeof CpmmPoolInfoLayout.decode> & {
     baseReserve: BN__default;
     quoteReserve: BN__default;
     vaultAAmount: BN__default;
     vaultBAmount: BN__default;
-    configInfo?: CpmmConfigInfoInterface;
+    configInfo?: ReturnType<typeof CpmmConfigInfoLayout.decode>;
     poolPrice: Decimal;
     programId: PublicKey;
 };
 declare type CpmmComputeData = {
     id: PublicKey;
     version: 7;
-    configInfo: CpmmConfigInfoInterface;
+    configInfo: ReturnType<typeof CpmmConfigInfoLayout.decode>;
     mintA: ApiV3Token;
     mintB: ApiV3Token;
     authority: PublicKey;
-} & Omit<CpmmRpcData, "configInfo" | "mintA" | "mintB">;
+} & Omit<CpmmParsedRpcData, "configInfo" | "mintA" | "mintB">;
 declare type CpmmLockExtInfo = {
     nftMint: PublicKey;
     nftAccount: PublicKey;
@@ -253,5 +241,29 @@ interface CpmmLockNftInfo extends CpmmLockNftBasicInfo {
         };
     };
 }
+interface CollectCreatorFees<T = TxVersion.LEGACY> {
+    poolInfo: ApiV3PoolInfoStandardItemCpmm;
+    poolKeys?: CpmmKeys;
+    programId?: PublicKey;
+    feePayer?: PublicKey;
+    associatedOnly?: boolean;
+    computeBudgetConfig?: ComputeBudgetConfig;
+    txTipConfig?: TxTipConfig;
+    txVersion?: T;
+}
+interface CollectMultiCreatorFees<T = TxVersion.LEGACY> {
+    poolInfoList: ApiV3PoolInfoStandardItemCpmm[];
+    programId?: PublicKey;
+    feePayer?: PublicKey;
+    associatedOnly?: boolean;
+    computeBudgetConfig?: ComputeBudgetConfig;
+    txTipConfig?: TxTipConfig;
+    txVersion?: T;
+}
+declare enum FeeOn {
+    BothToken = 0,
+    OnlyTokenA = 1,
+    OnlyTokenB = 2
+}
 
-export { AddCpmmLiquidityParams, ComputePairAmountParams, CpmmComputeData, CpmmConfigInfoInterface, CpmmLockExtInfo, CpmmLockNftBasicInfo, CpmmLockNftInfo, CpmmPoolInfoInterface, CpmmRpcData, CpmmSwapParams, CreateCpmmPoolAddress, CreateCpmmPoolParam, HarvestLockCpmmLpParams, HarvestMultiLockCpmmLpParams, LockCpmmLpParams, WithdrawCpmmLiquidityParams };
+export { AddCpmmLiquidityParams, CollectCreatorFees, CollectMultiCreatorFees, ComputePairAmountParams, CpmmComputeData, CpmmLockExtInfo, CpmmLockNftBasicInfo, CpmmLockNftInfo, CpmmParsedRpcData, CpmmSwapParams, CreateCpmmPoolAddress, CreateCpmmPoolParam, CreateCpmmPoolPermissionParam, FeeOn, HarvestLockCpmmLpParams, HarvestMultiLockCpmmLpParams, LockCpmmLpParams, WithdrawCpmmLiquidityParams };

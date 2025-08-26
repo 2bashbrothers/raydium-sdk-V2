@@ -44,5 +44,9 @@ declare function getCpLockPda(programId: PublicKey, mint: PublicKey): {
     publicKey: PublicKey;
     nonce: number;
 };
+declare function getPdaPermissionId(programId: PublicKey, owner: PublicKey): {
+    publicKey: PublicKey;
+    nonce: number;
+};
 
-export { LOCK_LIQUIDITY_SEED, getCpLockPda, getCpmmPdaAmmConfigId, getCpmmPdaPoolId, getCreatePoolKeys, getPdaLpMint, getPdaObservationId, getPdaPoolAuthority, getPdaVault };
+export { LOCK_LIQUIDITY_SEED, getCpLockPda, getCpmmPdaAmmConfigId, getCpmmPdaPoolId, getCreatePoolKeys, getPdaLpMint, getPdaObservationId, getPdaPermissionId, getPdaPoolAuthority, getPdaVault };

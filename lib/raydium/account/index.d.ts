@@ -6,7 +6,7 @@ import '../../marshmallow/index.js';
 import '@solana/web3.js';
 import 'bn.js';
 import '../../marshmallow/buffer-layout.js';
-import '../../api-734bb3fa.js';
+import '../../api-36727790.js';
 import 'axios';
 import '../../solana/type.js';
 import '@solana/spl-token';

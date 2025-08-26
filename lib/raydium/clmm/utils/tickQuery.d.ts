@@ -1,8 +1,9 @@
 import { PublicKey, Connection } from '@solana/web3.js';
 import BN__default from 'bn.js';
-import { T as TickArrayBitmapExtensionType, W as TickArray, V as Tick } from '../../../type-4f8e9671.js';
+import { Q as TickArray, P as Tick } from '../../../type-3401c86a.js';
+import { TickArrayBitmapExtensionLayout } from '../layout.js';
 import 'decimal.js';
-import '../../../api-734bb3fa.js';
+import '../../../api-36727790.js';
 import 'axios';
 import '../../../solana/type.js';
 import '@solana/spl-token';
@@ -16,7 +17,6 @@ import '../../../common/logger.js';
 import '../../../module/currency.js';
 import '../../../marshmallow/index.js';
 import '../../../marshmallow/buffer-layout.js';
-import '../layout.js';
 
 declare const FETCH_TICKARRAY_COUNT = 15;
 declare type PoolVars = {
@@ -26,7 +26,7 @@ declare type PoolVars = {
     fee: number;
 };
 declare class TickQuery {
-    static getTickArrays(connection: Connection, programId: PublicKey, poolId: PublicKey, tickCurrent: number, tickSpacing: number, tickArrayBitmapArray: BN__default[], exTickArrayBitmap: TickArrayBitmapExtensionType): Promise<{
+    static getTickArrays(connection: Connection, programId: PublicKey, poolId: PublicKey, tickCurrent: number, tickSpacing: number, tickArrayBitmapArray: BN__default[], exTickArrayBitmap: ReturnType<typeof TickArrayBitmapExtensionLayout.decode>): Promise<{
         [key: string]: TickArray;
     }>;
     static nextInitializedTick(programId: PublicKey, poolId: PublicKey, tickArrayCache: {
@@ -36,7 +36,7 @@ declare class TickQuery {
         tickArrayAddress: PublicKey | undefined;
         tickArrayStartTickIndex: number;
     };
-    static nextInitializedTickArray(tickIndex: number, tickSpacing: number, zeroForOne: boolean, tickArrayBitmap: BN__default[], exBitmapInfo: TickArrayBitmapExtensionType): {
+    static nextInitializedTickArray(tickIndex: number, tickSpacing: number, zeroForOne: boolean, tickArrayBitmap: BN__default[], exBitmapInfo: ReturnType<typeof TickArrayBitmapExtensionLayout.decode>): {
         isExist: boolean;
         nextStartIndex: number;
     };

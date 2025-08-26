@@ -1,5 +1,5 @@
 import { PublicKey, Signer, Keypair } from '@solana/web3.js';
-import { bU as ComputeBudgetConfig, bV as TxTipConfig } from '../../api-734bb3fa.js';
+import { bT as ComputeBudgetConfig, bU as TxTipConfig } from '../../api-36727790.js';
 import BN__default from 'bn.js';
 import { TransferFeeConfig } from '@solana/spl-token';
 import { TxVersion } from '../../common/txTool/txType.js';
@@ -57,6 +57,7 @@ interface CreateLaunchPad<T = TxVersion.LEGACY> {
         transferFeeBasePoints: number;
         maxinumFee: BN__default;
     };
+    creatorFeeOn?: CpmmCreatorFeeOn;
 }
 interface BuyToken<T = TxVersion.LEGACY> {
     mintA: PublicKey;
@@ -81,6 +82,7 @@ interface BuyToken<T = TxVersion.LEGACY> {
     checkCreateATAOwner?: boolean;
     transferFeeConfigA?: TransferFeeConfig | undefined;
     skipCheckMintA?: boolean;
+    fromCreate?: boolean;
 }
 interface BuyTokenExactOut<T = TxVersion.LEGACY> extends Omit<BuyToken, "buyAmount" | "minMintAAmount" | "txVersion"> {
     maxBuyAmount?: BN__default;
@@ -285,12 +287,27 @@ interface ClaimCreatorFee<T = TxVersion.LEGACY> {
     txVersion?: T;
     feePayer?: PublicKey;
 }
+interface ClaimMultiCreatorFee<T = TxVersion.LEGACY> {
+    programId?: PublicKey;
+    mintBList: {
+        pubKey: PublicKey;
+        programId?: PublicKey;
+    }[];
+    computeBudgetConfig?: ComputeBudgetConfig;
+    txTipConfig?: TxTipConfig;
+    txVersion?: T;
+    feePayer?: PublicKey;
+}
 declare type LaunchpadPoolInfo = ReturnType<typeof LaunchpadPool.decode>;
 declare type LaunchpadConfigInfo = ReturnType<typeof LaunchpadConfig.decode>;
 declare type LaunchpadPlatformInfo = ReturnType<typeof PlatformConfig.decode>;
+declare enum CpmmCreatorFeeOn {
+    OnlyTokenB = 0,
+    BothToken = 1
+}
 declare type Sniper = {
     owner: Keypair;
     amount: BN__default;
 };
 
-export { BuyToken, BuyTokenExactOut, ClaimAllPlatformFee, ClaimCreatorFee, ClaimMultiVesting, ClaimMultipleVaultPlatformFee, ClaimPlatformFee, ClaimVaultPlatformFee, ClaimVesting, CreateLaunchPad, CreateMultipleVesting, CreatePlatform, CreateVesting, LaunchpadConfigInfo, LaunchpadPlatformInfo, LaunchpadPoolInfo, SellToken, SellTokenExactOut, Sniper, UpdatePlatform };
+export { BuyToken, BuyTokenExactOut, ClaimAllPlatformFee, ClaimCreatorFee, ClaimMultiCreatorFee, ClaimMultiVesting, ClaimMultipleVaultPlatformFee, ClaimPlatformFee, ClaimVaultPlatformFee, ClaimVesting, CpmmCreatorFeeOn, CreateLaunchPad, CreateMultipleVesting, CreatePlatform, CreateVesting, LaunchpadConfigInfo, LaunchpadPlatformInfo, LaunchpadPoolInfo, SellToken, SellTokenExactOut, Sniper, UpdatePlatform };
