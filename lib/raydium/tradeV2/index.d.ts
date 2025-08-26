@@ -2,7 +2,7 @@ export { ApiSwapV1Out, makeSwapInstruction, route1Instruction, route2Instruction
 export { BasicPoolInfo, ComputeAmountOutAmmLayout, ComputeAmountOutLayout, ComputeAmountOutRouteLayout, ComputePoolType, ComputeRoutePathType, MakeSwapInstructionParam, PoolAccountInfoV4, ReturnTypeFetchMultipleInfo, ReturnTypeGetAddLiquidityDefaultPool, ReturnTypeGetAllRoute, ReturnTypeMakeSwapInstruction, ReturnTypeMakeSwapTransaction, RoutePathType } from './type.js';
 import '@solana/web3.js';
 import 'bn.js';
-import '../../api-36727790.js';
+import '../../api-6c7bcd22.js';
 import 'axios';
 import '../../solana/type.js';
 import '@solana/spl-token';
@@ -17,7 +17,7 @@ import '../../common/logger.js';
 import '../../module/currency.js';
 import '../../marshmallow/index.js';
 import '../../marshmallow/buffer-layout.js';
-import '../../type-3401c86a.js';
+import '../../type-4bd1b99a.js';
 import '../clmm/layout.js';
 import '../liquidity/type.js';
 import '../liquidity/layout.js';
