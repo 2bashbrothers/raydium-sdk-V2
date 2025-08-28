@@ -16,9 +16,9 @@ declare const CpmmConfigInfoLayout: Structure<number | boolean | _solana_web3_js
     creatorFeeRate: BN;
 }>;
 declare const CpmmPoolInfoLayout: Structure<number | boolean | number[] | _solana_web3_js.PublicKey | Buffer | BN | BN[], "", {
+    status: number;
     bump: number;
     openTime: BN;
-    status: number;
     mintA: _solana_web3_js.PublicKey;
     mintB: _solana_web3_js.PublicKey;
     vaultA: _solana_web3_js.PublicKey;

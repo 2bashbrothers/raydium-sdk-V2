@@ -54,6 +54,7 @@ declare const PoolInfoLayout: Structure<number | number[] | _solana_web3_js.Publ
     rewardGrowthGlobalX64: BN;
 }[], "", {
     liquidity: BN;
+    status: number;
     padding: BN[];
     rewardInfos: {
         rewardState: number;
@@ -71,7 +72,6 @@ declare const PoolInfoLayout: Structure<number | number[] | _solana_web3_js.Publ
     creator: _solana_web3_js.PublicKey;
     bump: number;
     startTime: BN;
-    status: number;
     ammConfig: _solana_web3_js.PublicKey;
     mintA: _solana_web3_js.PublicKey;
     mintB: _solana_web3_js.PublicKey;

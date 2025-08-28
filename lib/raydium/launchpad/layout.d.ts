@@ -35,9 +35,9 @@ declare const LaunchpadPool: Structure<number | number[] | _solana_web3_js.Publi
     unlockPeriod: BN;
     totalAllocatedShare: BN;
 }, "", {
+    status: number;
     creator: _solana_web3_js.PublicKey;
     bump: number;
-    status: number;
     mintA: _solana_web3_js.PublicKey;
     mintB: _solana_web3_js.PublicKey;
     vaultA: _solana_web3_js.PublicKey;

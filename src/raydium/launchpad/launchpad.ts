@@ -442,7 +442,7 @@ export default class LaunchpadModule extends ModuleBase {
           : undefined;
     }
 
-    txBuilder.addTipInstruction(txTipConfig);
+    //txBuilder.addTipInstruction(txTipConfig);
 
     if (txVersion === TxVersion.V0) {
       console.log("VERSION V0");

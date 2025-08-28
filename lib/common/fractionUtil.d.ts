@@ -1,4 +1,4 @@
-import { ag as Numberish, cf as Fraction } from '../api-020dc49a.js';
+import { ag as Numberish, cf as Fraction } from '../api-236288c2.js';
 import 'axios';
 import '../solana/type.js';
 import '@solana/web3.js';
