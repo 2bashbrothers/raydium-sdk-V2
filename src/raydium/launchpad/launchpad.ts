@@ -773,32 +773,44 @@ export default class LaunchpadModule extends ModuleBase {
     console.log("userTokenAccountA: ", userTokenAccountA);
     console.log("userTokenAccountB: ", userTokenAccountB);
 
-    const ixs = [
+    // const ixs = [
+    //     createAssociatedTokenAccountIdempotentInstruction(
+    //       sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //       userTokenAccountA,
+    //       sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //       mintA,
+    //       mintAProgram,
+    //     ),
+    //     ...(fromCreate
+    //       ? [
+    //           createAssociatedTokenAccountIdempotentInstruction(
+    //             sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //             userTokenAccountB!,
+    //             sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //             mintB,
+    //             TOKEN_PROGRAM_ID,
+    //           ),
+    //           SystemProgram.transfer({
+    //             fromPubkey: sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //             toPubkey: userTokenAccountB!,
+    //             lamports: BigInt(buyAmount.toString()),
+    //           }),
+    //           createSyncNativeInstruction(userTokenAccountB!),
+    //         ]
+    //       : []),
+    //   ];
+
+     const ixs = [
         createAssociatedTokenAccountIdempotentInstruction(
           sniper?.owner.publicKey || this.scope.ownerPubKey,
           userTokenAccountA,
           sniper?.owner.publicKey || this.scope.ownerPubKey,
           mintA,
           mintAProgram,
-        ),
-        ...(fromCreate
-          ? [
-              createAssociatedTokenAccountIdempotentInstruction(
-                sniper?.owner.publicKey || this.scope.ownerPubKey,
-                userTokenAccountB!,
-                sniper?.owner.publicKey || this.scope.ownerPubKey,
-                mintB,
-                TOKEN_PROGRAM_ID,
-              ),
-              SystemProgram.transfer({
-                fromPubkey: sniper?.owner.publicKey || this.scope.ownerPubKey,
-                toPubkey: userTokenAccountB!,
-                lamports: BigInt(buyAmount.toString()),
-              }),
-              createSyncNativeInstruction(userTokenAccountB!),
-            ]
-          : []),
+        )
       ];
+
+    
 
     console.log("adding ixs: ", ixs);
 
@@ -823,7 +835,7 @@ export default class LaunchpadModule extends ModuleBase {
           checkCreateATAOwner,
         });
       if (_ownerTokenAccountB) userTokenAccountB = _ownerTokenAccountB;
-      txBuilder.addInstruction(_tokenAccountBInstruction || {});
+      // txBuilder.addInstruction(_tokenAccountBInstruction || {});
     }
     if (userTokenAccountB === undefined)
       this.logAndCreateError(
@@ -890,41 +902,41 @@ export default class LaunchpadModule extends ModuleBase {
 
     const shareATA = shareFeeReceiver ? getATAAddress(shareFeeReceiver, mintB, TOKEN_PROGRAM_ID).publicKey : undefined;
     if (shareATA) {
-      txBuilder.addInstruction({
-        instructions: [
-          createAssociatedTokenAccountIdempotentInstruction(sniper?.owner.publicKey || this.scope.ownerPubKey, shareATA, shareFeeReceiver!, mintB),
-        ],
-      });
+      // txBuilder.addInstruction({
+      //   instructions: [
+      //     createAssociatedTokenAccountIdempotentInstruction(sniper?.owner.publicKey || this.scope.ownerPubKey, shareATA, shareFeeReceiver!, mintB),
+      //   ],
+      // });
     }
 
-    txBuilder.addInstruction({
-      instructions: [
-        buyExactInInstruction(
-          programId,
-          sniper?.owner.publicKey || this.scope.ownerPubKey,
-          authProgramId,
-          poolInfo.configId,
-          poolInfo.platformId,
-          poolId,
-          userTokenAccountA!,
-          userTokenAccountB!,
-          poolInfo.vaultA,
-          poolInfo.vaultB,
-          mintA,
-          mintB,
-          mintAProgram,
-          TOKEN_PROGRAM_ID,
+    // txBuilder.addInstruction({
+    //   instructions: [
+    //     buyExactInInstruction(
+    //       programId,
+    //       sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //       authProgramId,
+    //       poolInfo.configId,
+    //       poolInfo.platformId,
+    //       poolId,
+    //       userTokenAccountA!,
+    //       userTokenAccountB!,
+    //       poolInfo.vaultA,
+    //       poolInfo.vaultB,
+    //       mintA,
+    //       mintB,
+    //       mintAProgram,
+    //       TOKEN_PROGRAM_ID,
 
-          getPdaPlatformVault(programId, poolInfo.platformId, mintB).publicKey,
-          getPdaCreatorVault(programId, poolInfo.creator, mintB).publicKey,
+    //       getPdaPlatformVault(programId, poolInfo.platformId, mintB).publicKey,
+    //       getPdaCreatorVault(programId, poolInfo.creator, mintB).publicKey,
 
-          calculatedAmount.amountB.lt(buyAmount) ? calculatedAmount.amountB : buyAmount,
-          minMintAAmount,
-          shareFeeRate,
-          shareATA,
-        ),
-      ],
-    });
+    //       calculatedAmount.amountB.lt(buyAmount) ? calculatedAmount.amountB : buyAmount,
+    //       minMintAAmount,
+    //       shareFeeRate,
+    //       shareATA,
+    //     ),
+    //   ],
+    // });
 
     txBuilder.addCustomComputeBudget(computeBudgetConfig);
     txBuilder.addTipInstruction(txTipConfig);
