@@ -4,7 +4,7 @@ import { BondingCurveParam } from './layout.js';
 import { CpmmCreatorFeeOn } from './type.js';
 import '../../marshmallow/index.js';
 import '../../marshmallow/buffer-layout.js';
-import '../../api-36727790.js';
+import '../../api-236288c2.js';
 import 'axios';
 import '../../solana/type.js';
 import '@solana/spl-token';

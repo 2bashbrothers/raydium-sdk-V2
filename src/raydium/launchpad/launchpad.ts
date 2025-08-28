@@ -427,7 +427,7 @@ export default class LaunchpadModule extends ModuleBase {
                 newerTransferFee: fee,
               }
             : undefined,
-          fromCreate: false
+          fromCreate: true
         });
         txs.push({
           ...sniperBuilder.AllTxData,
@@ -773,8 +773,7 @@ export default class LaunchpadModule extends ModuleBase {
     console.log("userTokenAccountA: ", userTokenAccountA);
     console.log("userTokenAccountB: ", userTokenAccountB);
 
-    txBuilder.addInstruction({
-      instructions: [
+    const ixs = [
         createAssociatedTokenAccountIdempotentInstruction(
           sniper?.owner.publicKey || this.scope.ownerPubKey,
           userTokenAccountA,
@@ -799,7 +798,12 @@ export default class LaunchpadModule extends ModuleBase {
               createSyncNativeInstruction(userTokenAccountB!),
             ]
           : []),
-      ],
+      ];
+
+    console.log("adding ixs: ", ixs);
+
+    txBuilder.addInstruction({
+      instructions: ixs
     });
 
     if (!fromCreate) {
