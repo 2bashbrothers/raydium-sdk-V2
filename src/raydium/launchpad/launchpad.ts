@@ -427,7 +427,7 @@ export default class LaunchpadModule extends ModuleBase {
                 newerTransferFee: fee,
               }
             : undefined,
-          fromCreate: true
+          fromCreate: false
         });
         txs.push({
           ...sniperBuilder.AllTxData,
