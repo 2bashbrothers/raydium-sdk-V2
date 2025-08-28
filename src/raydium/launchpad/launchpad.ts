@@ -171,7 +171,7 @@ export default class LaunchpadModule extends ModuleBase {
     const { publicKey: vaultB } = getPdaLaunchpadVaultId(programId, poolId, mintB);
     const { publicKey: metaId } = getPdaMetadataKey(mintA);
 
-    this.logDebug(
+    console.log(
       `create token: ${mintA.toBase58()}, mintB: ${mintB.toBase58()}, decimals A:${decimals}/B:${mintBDecimals}, config:${configId.toBase58()}`,
     );
 
@@ -396,6 +396,7 @@ export default class LaunchpadModule extends ModuleBase {
         fromCreate: true,
       });
 
+      console.log("FEE: ", fee);
       console.log("PREPARING SNIPER TRANSACTIONS");
       for (const sniper of snipers) {
 
@@ -483,6 +484,230 @@ export default class LaunchpadModule extends ModuleBase {
     }
   }
 
+  public async buyTokenOriginal<T extends TxVersion>({
+    programId = LAUNCHPAD_PROGRAM,
+    authProgramId,
+    mintA,
+    mintAProgram = TOKEN_PROGRAM_ID,
+    mintB = NATIVE_MINT,
+    poolInfo: propPoolInfo,
+
+    configInfo: propConfigInfo,
+    platformFeeRate,
+
+    txVersion,
+    computeBudgetConfig,
+    txTipConfig,
+    feePayer,
+    buyAmount,
+    minMintAAmount: propMinMintAAmount,
+    slippage,
+    sniper,
+    shareFeeRate = new BN(0),
+    shareFeeReceiver,
+
+    associatedOnly = true,
+    checkCreateATAOwner = false,
+    fromCreate = false,
+    transferFeeConfigA: propsTransferFeeConfigA,
+    skipCheckMintA = false,
+  }: BuyToken<T>): Promise<MakeTxData<T, SwapInfoReturnExt>> {
+    if (buyAmount.lte(new BN(0))) this.logAndCreateError("buy amount should gt 0:", buyAmount.toString());
+
+    const txBuilder = sniper ? this.createSniperTxBuilder(sniper.owner, sniper.owner.publicKey) : this.createTxBuilder(feePayer);
+    //const txBuilder = this.createTxBuilder(feePayer);
+
+
+    
+    const { publicKey: poolId } = getPdaLaunchpadPoolId(programId, mintA, mintB);
+    authProgramId = authProgramId ?? getPdaLaunchpadAuth(programId).publicKey;
+
+    let transferFeeConfigA = propsTransferFeeConfigA;
+    if (!skipCheckMintA) {
+      console.log("!skipCheckMintA: ", skipCheckMintA);
+      if (!transferFeeConfigA) {
+        console.log("!transferFeeConfigA: ", transferFeeConfigA);
+        const mintInfo = await this.scope.connection.getAccountInfo(mintA);
+        if (mintInfo && mintInfo.owner.equals(TOKEN_2022_PROGRAM_ID)) {
+          console.log("TOKEN_2022_PROGRAM_ID: ", skipCheckMintA);
+          mintAProgram = mintInfo.owner;
+          const onlineData = unpackMint(mintA, mintInfo, mintAProgram);
+          transferFeeConfigA = getTransferFeeConfig(onlineData) || undefined;
+        }
+      } else {
+        console.log("TOKEN_2022_PROGRAM_ID: ", TOKEN_2022_PROGRAM_ID);
+        mintAProgram = TOKEN_2022_PROGRAM_ID;
+      }
+    }
+
+    const userTokenAccountA = this.scope.account.getAssociatedTokenAccount(mintA, mintAProgram);
+    let userTokenAccountB: PublicKey | null = fromCreate
+      ? this.scope.account.getAssociatedTokenAccount(mintB, TOKEN_PROGRAM_ID)
+      : null;
+    const mintBUseSOLBalance = mintB.equals(NATIVE_MINT);
+
+    txBuilder.addInstruction({
+      instructions: [
+        createAssociatedTokenAccountIdempotentInstruction(
+          this.scope.ownerPubKey,
+          userTokenAccountA,
+          this.scope.ownerPubKey,
+          mintA,
+          mintAProgram,
+        ),
+        ...(fromCreate
+          ? [
+              createAssociatedTokenAccountIdempotentInstruction(
+                this.scope.ownerPubKey,
+                userTokenAccountB!,
+                this.scope.ownerPubKey,
+                mintB,
+                TOKEN_PROGRAM_ID,
+              ),
+              SystemProgram.transfer({
+                fromPubkey: this.scope.ownerPubKey,
+                toPubkey: userTokenAccountB!,
+                lamports: BigInt(buyAmount.toString()),
+              }),
+              createSyncNativeInstruction(userTokenAccountB!),
+            ]
+          : []),
+      ],
+    });
+
+    if (!fromCreate) {
+      const { account: _ownerTokenAccountB, instructionParams: _tokenAccountBInstruction } =
+        await this.scope.account.getOrCreateTokenAccount({
+          mint: mintB,
+          owner: this.scope.ownerPubKey,
+          createInfo: mintBUseSOLBalance
+            ? {
+                payer: this.scope.ownerPubKey!,
+                amount: buyAmount,
+              }
+            : undefined,
+          skipCloseAccount: !mintBUseSOLBalance,
+          notUseTokenAccount: mintBUseSOLBalance,
+          associatedOnly: mintBUseSOLBalance ? false : associatedOnly,
+          checkCreateATAOwner,
+        });
+      if (_ownerTokenAccountB) userTokenAccountB = _ownerTokenAccountB;
+      txBuilder.addInstruction(_tokenAccountBInstruction || {});
+    }
+    if (userTokenAccountB === undefined)
+      this.logAndCreateError(
+        `cannot found mintB(${mintB.toBase58()}) token accounts`,
+        "tokenAccounts",
+        this.scope.account.tokenAccounts,
+      );
+    let poolInfo = propPoolInfo;
+    if (!poolInfo) {
+      const poolData = await this.scope.connection.getAccountInfo(poolId, { commitment: "processed" });
+      if (!poolData) this.logAndCreateError("cannot found pool:", poolId.toBase58());
+      poolInfo = LaunchpadPool.decode(poolData!.data);
+    }
+
+    let configInfo = propConfigInfo;
+    const allData = await getMultipleAccountsInfoWithCustomFlags(
+      this.scope.connection,
+      [configInfo ? undefined : poolInfo.configId, poolInfo.platformId]
+        .filter(Boolean)
+        .map((key) => ({ pubkey: key! })),
+    );
+    if (!configInfo) {
+      const data = allData.find((d) => d.pubkey.equals(poolInfo!.configId));
+      if (!data || !data.accountInfo) this.logAndCreateError("config not found: ", poolInfo.configId.toBase58());
+      configInfo = LaunchpadConfig.decode(data!.accountInfo!.data);
+    }
+    const platformData = allData.find((d) => d.pubkey.equals(poolInfo!.platformId));
+    if (!platformData || !platformData.accountInfo)
+      this.logAndCreateError("platform info not found: ", poolInfo.configId.toBase58());
+    const platformInfo = PlatformConfig.decode(platformData!.accountInfo!.data);
+    platformFeeRate = platformFeeRate || platformInfo.feeRate;
+
+    const calculatedAmount = Curve.buyExactIn({
+      poolInfo,
+      amountB: buyAmount,
+      protocolFeeRate: configInfo.tradeFeeRate,
+      platformFeeRate,
+      curveType: configInfo.curveType,
+      shareFeeRate,
+      creatorFeeRate: platformInfo.creatorFeeRate,
+      transferFeeConfigA,
+      slot: await this.scope.connection.getSlot(),
+    });
+
+    const decimalAmountA = new Decimal(calculatedAmount.amountA.amount.toString()).sub(
+      calculatedAmount.amountA.fee?.toString() ?? 0,
+    );
+
+    const multiplier = slippage
+      ? new Decimal(SLIPPAGE_UNIT.sub(slippage).toNumber() / SLIPPAGE_UNIT.toNumber()).clampedTo(0, 1)
+      : new Decimal(1);
+
+    const minMintAAmount =
+      propMinMintAAmount ??
+      (slippage
+        ? new BN(decimalAmountA.mul(multiplier).toFixed(0))
+        : calculatedAmount.amountA.amount.sub(calculatedAmount.amountA.fee ?? new BN(0)));
+
+    if (calculatedAmount.amountB.lt(buyAmount)) {
+      console.log(
+        `maximum ${mintA.toBase58()} amount can buy is ${calculatedAmount.amountA.toString()}, input ${mintB.toBase58()} amount: ${calculatedAmount.amountB.toString()}`,
+      );
+    }
+
+    const shareATA = shareFeeReceiver ? getATAAddress(shareFeeReceiver, mintB, TOKEN_PROGRAM_ID).publicKey : undefined;
+    if (shareATA) {
+      txBuilder.addInstruction({
+        instructions: [
+          createAssociatedTokenAccountIdempotentInstruction(this.scope.ownerPubKey, shareATA, shareFeeReceiver!, mintB),
+        ],
+      });
+    }
+
+    txBuilder.addInstruction({
+      instructions: [
+        buyExactInInstruction(
+          programId,
+          this.scope.ownerPubKey,
+          authProgramId,
+          poolInfo.configId,
+          poolInfo.platformId,
+          poolId,
+          userTokenAccountA!,
+          userTokenAccountB!,
+          poolInfo.vaultA,
+          poolInfo.vaultB,
+          mintA,
+          mintB,
+          mintAProgram,
+          TOKEN_PROGRAM_ID,
+
+          getPdaPlatformVault(programId, poolInfo.platformId, mintB).publicKey,
+          getPdaCreatorVault(programId, poolInfo.creator, mintB).publicKey,
+
+          calculatedAmount.amountB.lt(buyAmount) ? calculatedAmount.amountB : buyAmount,
+          minMintAAmount,
+          shareFeeRate,
+          shareATA,
+        ),
+      ],
+    });
+
+    txBuilder.addCustomComputeBudget(computeBudgetConfig);
+    txBuilder.addTipInstruction(txTipConfig);
+
+    return txBuilder.versionBuild<SwapInfoReturnExt>({
+      txVersion,
+      extInfo: {
+        ...calculatedAmount,
+        decimalOutAmount: decimalAmountA,
+        minDecimalOutAmount: new Decimal(minMintAAmount.toString()),
+      },
+    }) as Promise<MakeTxData<T, SwapInfoReturnExt>>;
+  }
+
   public async buyToken<T extends TxVersion>({
     programId = LAUNCHPAD_PROGRAM,
     authProgramId,
@@ -517,14 +742,18 @@ export default class LaunchpadModule extends ModuleBase {
 
     let transferFeeConfigA = propsTransferFeeConfigA;
     if (!skipCheckMintA) {
+      console.log("!skipCheckMintA: ", skipCheckMintA);
       if (!transferFeeConfigA) {
+        console.log("!transferFeeConfigA: ", transferFeeConfigA);
         const mintInfo = await this.scope.connection.getAccountInfo(mintA);
         if (mintInfo && mintInfo.owner.equals(TOKEN_2022_PROGRAM_ID)) {
+          console.log("!mintInfo: ", mintInfo);
           mintAProgram = mintInfo.owner;
           const onlineData = unpackMint(mintA, mintInfo, mintAProgram);
           transferFeeConfigA = getTransferFeeConfig(onlineData) || undefined;
         }
       } else {
+        console.log("mintAProgram: ", TOKEN_2022_PROGRAM_ID);
         mintAProgram = TOKEN_2022_PROGRAM_ID;
       }
     }
@@ -542,7 +771,7 @@ export default class LaunchpadModule extends ModuleBase {
     const mintBUseSOLBalance = mintB.equals(NATIVE_MINT);
 
     console.log("userTokenAccountA: ", userTokenAccountA);
-    console.log("mintAProgram: ", mintAProgram);
+    console.log("userTokenAccountB: ", userTokenAccountB);
 
     txBuilder.addInstruction({
       instructions: [
@@ -694,7 +923,6 @@ export default class LaunchpadModule extends ModuleBase {
     });
 
     txBuilder.addCustomComputeBudget(computeBudgetConfig);
-    console.log("Adding Tip Config: ", txTipConfig);
     txBuilder.addTipInstruction(txTipConfig);
 
     return txBuilder.versionBuild<SwapInfoReturnExt>({

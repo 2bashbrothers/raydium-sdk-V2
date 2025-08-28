@@ -1,4 +1,4 @@
-import { bJ as TokenInfo } from '../../api-236288c2.js';
+import { bJ as TokenInfo } from '../../api-36727790.js';
 import 'axios';
 import '../../solana/type.js';
 import '@solana/web3.js';
