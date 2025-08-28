@@ -15,10 +15,10 @@ declare const CpmmConfigInfoLayout: Structure<number | boolean | _solana_web3_js
     fundOwner: _solana_web3_js.PublicKey;
     creatorFeeRate: BN;
 }>;
-declare const CpmmPoolInfoLayout: Structure<number | boolean | number[] | _solana_web3_js.PublicKey | Buffer | BN | BN[], "", {
-    status: number;
+declare const CpmmPoolInfoLayout: Structure<number | boolean | _solana_web3_js.PublicKey | number[] | Buffer | BN | BN[], "", {
     bump: number;
     openTime: BN;
+    status: number;
     mintA: _solana_web3_js.PublicKey;
     mintB: _solana_web3_js.PublicKey;
     vaultA: _solana_web3_js.PublicKey;

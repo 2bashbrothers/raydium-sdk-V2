@@ -795,7 +795,7 @@ export default class LaunchpadModule extends ModuleBase {
                 toPubkey: userTokenAccountB!,
                 lamports: BigInt(buyAmount.toString()),
               }),
-              // createSyncNativeInstruction(userTokenAccountB!),
+              createSyncNativeInstruction(userTokenAccountB!),
             ]
           : []),
       ];

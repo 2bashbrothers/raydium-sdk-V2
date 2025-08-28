@@ -28,16 +28,16 @@ declare const VestingSchedule: Structure<BN, "", {
     unlockPeriod: BN;
     totalAllocatedShare: BN;
 }>;
-declare const LaunchpadPool: Structure<number | number[] | _solana_web3_js.PublicKey | BN | {
+declare const LaunchpadPool: Structure<number | _solana_web3_js.PublicKey | number[] | BN | {
     startTime: BN;
     totalLockedAmount: BN;
     cliffPeriod: BN;
     unlockPeriod: BN;
     totalAllocatedShare: BN;
 }, "", {
-    status: number;
     creator: _solana_web3_js.PublicKey;
     bump: number;
+    status: number;
     mintA: _solana_web3_js.PublicKey;
     mintB: _solana_web3_js.PublicKey;
     vaultA: _solana_web3_js.PublicKey;
@@ -109,7 +109,7 @@ declare const PlatformCurveParam: Structure<number | _solana_web3_js.PublicKey |
         migrateCpmmFeeOn: number;
     };
 }>;
-declare const PlatformConfig: Structure<number[] | _solana_web3_js.PublicKey | BN | {
+declare const PlatformConfig: Structure<_solana_web3_js.PublicKey | number[] | BN | {
     index: number;
     configId: _solana_web3_js.PublicKey;
     epoch: BN;
