@@ -790,11 +790,11 @@ export default class LaunchpadModule extends ModuleBase {
                 mintB,
                 TOKEN_PROGRAM_ID,
               ),
-              // SystemProgram.transfer({
-              //   fromPubkey: sniper?.owner.publicKey || this.scope.ownerPubKey,
-              //   toPubkey: userTokenAccountB!,
-              //   lamports: BigInt(buyAmount.toString()),
-              // }),
+              SystemProgram.transfer({
+                fromPubkey: sniper?.owner.publicKey || this.scope.ownerPubKey,
+                toPubkey: userTokenAccountB!,
+                lamports: BigInt(buyAmount.toString()),
+              }),
               // createSyncNativeInstruction(userTokenAccountB!),
             ]
           : []),
