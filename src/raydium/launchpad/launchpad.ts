@@ -773,42 +773,42 @@ export default class LaunchpadModule extends ModuleBase {
     console.log("userTokenAccountA: ", userTokenAccountA);
     console.log("userTokenAccountB: ", userTokenAccountB);
 
-    // const ixs = [
-    //     createAssociatedTokenAccountIdempotentInstruction(
-    //       sniper?.owner.publicKey || this.scope.ownerPubKey,
-    //       userTokenAccountA,
-    //       sniper?.owner.publicKey || this.scope.ownerPubKey,
-    //       mintA,
-    //       mintAProgram,
-    //     ),
-    //     ...(fromCreate
-    //       ? [
-    //           createAssociatedTokenAccountIdempotentInstruction(
-    //             sniper?.owner.publicKey || this.scope.ownerPubKey,
-    //             userTokenAccountB!,
-    //             sniper?.owner.publicKey || this.scope.ownerPubKey,
-    //             mintB,
-    //             TOKEN_PROGRAM_ID,
-    //           ),
-    //           SystemProgram.transfer({
-    //             fromPubkey: sniper?.owner.publicKey || this.scope.ownerPubKey,
-    //             toPubkey: userTokenAccountB!,
-    //             lamports: BigInt(buyAmount.toString()),
-    //           }),
-    //           createSyncNativeInstruction(userTokenAccountB!),
-    //         ]
-    //       : []),
-    //   ];
-
-     const ixs = [
+    const ixs = [
         createAssociatedTokenAccountIdempotentInstruction(
           sniper?.owner.publicKey || this.scope.ownerPubKey,
           userTokenAccountA,
           sniper?.owner.publicKey || this.scope.ownerPubKey,
           mintA,
           mintAProgram,
-        )
+        ),
+        ...(fromCreate
+          ? [
+              createAssociatedTokenAccountIdempotentInstruction(
+                sniper?.owner.publicKey || this.scope.ownerPubKey,
+                userTokenAccountB!,
+                sniper?.owner.publicKey || this.scope.ownerPubKey,
+                mintB,
+                TOKEN_PROGRAM_ID,
+              ),
+              SystemProgram.transfer({
+                fromPubkey: sniper?.owner.publicKey || this.scope.ownerPubKey,
+                toPubkey: userTokenAccountB!,
+                lamports: BigInt(buyAmount.toString()),
+              }),
+              createSyncNativeInstruction(userTokenAccountB!),
+            ]
+          : []),
       ];
+
+    //  const ixs = [
+    //     createAssociatedTokenAccountIdempotentInstruction(
+    //       sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //       userTokenAccountA,
+    //       sniper?.owner.publicKey || this.scope.ownerPubKey,
+    //       mintA,
+    //       mintAProgram,
+    //     )
+    //   ];
 
     
 
