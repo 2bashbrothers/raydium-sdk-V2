@@ -770,8 +770,8 @@ export default class LaunchpadModule extends ModuleBase {
       : null;
     const mintBUseSOLBalance = mintB.equals(NATIVE_MINT);
 
-    console.log("userTokenAccountA: ", userTokenAccountA);
-    console.log("userTokenAccountB: ", userTokenAccountB);
+    console.log("XXXXuserTokenAccountA: ", userTokenAccountA);
+    console.log("XXXXuserTokenAccountB: ", userTokenAccountB);
 
     const ixs = [
         createAssociatedTokenAccountIdempotentInstruction(
